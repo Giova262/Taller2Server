@@ -1,0 +1,55 @@
+define DeliveryDatos{
+ 
+    constructor: function(options){
+        this.envio=options.envio;
+        this.cantidadEnviosDia = options.cantidadEnviosDia ;
+        this.ndia= options.ndia;
+        this.hora=options.hora;
+        this.nivel=options.nivel;
+        this.puntos= options.puntos;
+        this.resultado=0;
+        this.error = [];
+    },
+
+        toString : function(){
+        return `DeliveryDatos(envio: ${this.envio}, cantidadEnviosDia: ${this.cantidadEnviosDia}, ndia: ${this.ndia}, hora: ${this.hora}, nivel: ${this.nivel}, puntos: ${this.puntos}`;
+    }
+}
+
+rule lun_a_vie_17_19 {
+    when {
+         dd:DeliveryDatos  1<=dd.ndia and dd.ndia<=5 and 17<=dd.hora and dd.hora<=19;
+         }
+    then {
+           dd.resultado+=3;
+         }
+}
+
+rule dom_10_14 {
+    when {
+         dd:DeliveryDatos  0==dd.ndia  and 10<=dd.hora and dd.hora<=14;
+         }
+    then {
+           dd.resultado+=20;
+         }
+}
+
+rule sab_a_dom_20_23 {
+    when {
+         dd:DeliveryDatos  (6==dd.ndia or 0==dd.ndia) and 20<=dd.hora and dd.hora<=23;
+         }
+    then {
+           dd.resultado+=10;
+         }
+}
+
+rule mas_10_envios_diarios {
+    when {
+         dd:DeliveryDatos  cantidadEnviosDia>10;
+         }
+    then {
+           dd.resultado+=2;
+         }
+}
+
+

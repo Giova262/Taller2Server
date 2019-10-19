@@ -1,0 +1,75 @@
+define UsuarioDatos{
+    constructor: function(options){
+        this.envio = options.envio;
+        this.kms = options.kms;
+        this.cantidadPedidos = options.cantidadPedidos;
+        this.ndia= options.ndia;
+        this.hora=options.hora;
+        this.nivel= options.nivel;
+        this.puntos= options.puntos;
+        this.error = [];
+    },
+
+        toString : function(){
+        return `UsuarioDatos(envio: ${this.envio}, kms: ${this.kms}, cantidadPedidos: ${this.cantidadPedidos}, ndia: ${this.ndia}, hora: ${this.hora},nivel: ${this.nivel}, puntos: ${this.puntos}`;
+    }
+}
+
+
+rule kms_min {
+    when {
+         ud: UsuarioDatos ud.kms < 2;
+         }
+    then {
+          ud.error.push("error menor a 2 kms");
+         }
+}
+
+rule kms_extra {
+    when {
+         ud: UsuarioDatos ud.kms >= 10;
+         }
+    then {
+          ud.envio+=(ud.kms-10)*15;
+         }
+}
+
+rule mierc_15_16 {
+    when {
+         ud: UsuarioDatos ud.ndia==3 and 15<=ud.hora and ud.hora<=16;
+         }
+    then {
+           ud.envio*=0.95;
+          
+          }
+}
+
+
+rule lun_a_viernes_17_19 {
+    when {
+         ud: UsuarioDatos  1<=ud.ndia and ud.ndia<=5 and 17<=ud.hora and ud.hora<=19;
+         }
+    then {
+          ud.envio*=1.10;
+         }
+}
+
+
+rule primer_pedido {
+    when {
+         ud: UsuarioDatos ud.cantidadPedidos ==0 ;
+         }
+    then {
+         ud.envio-=100; 
+         }
+}
+
+rule mas_cinco_pedidos {
+    when {
+         ud: UsuarioDatos ud.cantidadPedidos>=5 ;
+         }
+    then {
+          ud.envio*=0.95;
+         }
+}
+
