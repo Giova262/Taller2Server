@@ -7,8 +7,6 @@ export async function getAll(req,res){
     
     try {
          
-        
-
         let comercios = await Comercio.findAll();
         
         if(comercios){
@@ -16,15 +14,14 @@ export async function getAll(req,res){
            res.json({
 
                 message:'todos los comercios registrados',
-                comercios
+                data:comercios
 
-            });
-
-            //res.json(['John', 'Betty', 'Hal']);
+            });          
         }
         else{
             res.status(500).json({
-                message:'No se encontro registros de comercios.'      
+                message:'No se encontro registros de comercios.',
+                data: {}      
             })
         }
        

@@ -81,14 +81,17 @@ export async function register(req,res){
             const token = jwt.sign({nuevoUsuario}, 'key' );
         
              res.json({
-               message:'Usuario Creado.Login Success.',                                     
-               token : token
+               message:'Usuario Creado.Login Success.', 
+               status: 1 ,                                    
+               token : token,
+               dato : nuevoUsuario
             })
         }
         
     } catch (error) {
         res.status(500).json({
             message:'Ocurrio un Error al crear usuario',
+            status: 0 ,
             data:{nombre,mail,pass},
             error:error
         });
@@ -118,7 +121,16 @@ export async function login(req,res){
                             uidfirebase:uid,
                             rol:rol
                         },
-                        attributes: ['id','nombre','mail','pass']
+                        attributes: [ 'nombre',
+                        'pass',
+                        'mail',
+                        'rol',
+                        'puntaje',
+                        'nivel',
+                        'foto',
+                        'cantEnvios',
+                        'redsocial',
+                        'uidfirebase']
                     });
                 
                     if(userFound){
@@ -130,7 +142,8 @@ export async function login(req,res){
                         res.json({
                             message:'Login Success.',
                             status: 1 ,
-                            token : token
+                            token : token,
+                            dato : userFound
                         })
             
                     }else{
@@ -189,7 +202,8 @@ export async function login(req,res){
                                     res.json({
                                         message:'Usuario Creado.Login Success.', 
                                         status: 1 ,                                    
-                                        token : token
+                                        token : token,
+                                        dato : nuevoUsuario
                                     })
 
                                 }else{
@@ -242,7 +256,16 @@ export async function login(req,res){
                     pass:pass,
                     rol:rol
                 },
-                attributes: ['id','nombre','mail','pass','rol']
+                attributes: [ 'nombre',
+                'pass',
+                'mail',
+                'rol',
+                'puntaje',
+                'nivel',
+                'foto',
+                'cantEnvios',
+                'redsocial',
+                'uidfirebase']
             });
         
             if(userFound){
@@ -252,7 +275,8 @@ export async function login(req,res){
                 res.json({
                     message:'Login Success.', 
                     status: 1 ,                
-                    token : token
+                    token : token,
+                    dato : userFound
                 })
     
             }else{
@@ -306,8 +330,8 @@ export async function chequeoToken(req,res,next){
 /** Verificacion token */
 export async function ensureToken(req,res,next){
     
-    const bearerHeader = req.headers['authorization'];
-    
+    const bearerHeader = req.headers['token'];
+  
     if( typeof bearerHeader !== 'undefined' ){
 
         const bearer = bearerHeader.split(" ");
@@ -316,6 +340,7 @@ export async function ensureToken(req,res,next){
         next();
 
     }else {
+
         res.json({
             message:'Token null error'
         });

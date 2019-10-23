@@ -17,6 +17,9 @@ var Comercio = _database.sequelize.define('comercio', {
     type: _sequelize["default"].INTEGER,
     primaryKey: true
   },
+  com_nombre: {
+    type: _sequelize["default"].TEXT
+  },
   com_direccion: {
     type: _sequelize["default"].TEXT
   },

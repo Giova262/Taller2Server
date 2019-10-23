@@ -135,7 +135,9 @@ function _register() {
               }, 'key');
               res.json({
                 message: 'Usuario Creado.Login Success.',
-                token: token
+                status: 1,
+                token: token,
+                dato: nuevoUsuario
               });
             }
 
@@ -147,6 +149,7 @@ function _register() {
             _context2.t0 = _context2["catch"](1);
             res.status(500).json({
               message: 'Ocurrio un Error al crear usuario',
+              status: 0,
               data: {
                 nombre: nombre,
                 mail: mail,
@@ -210,7 +213,7 @@ function _login() {
                             uidfirebase: uid,
                             rol: rol
                           },
-                          attributes: ['id', 'nombre', 'mail', 'pass']
+                          attributes: ['nombre', 'pass', 'mail', 'rol', 'puntaje', 'nivel', 'foto', 'cantEnvios', 'redsocial', 'uidfirebase']
                         });
 
                       case 4:
@@ -224,7 +227,8 @@ function _login() {
                           res.json({
                             message: 'Login Success.',
                             status: 1,
-                            token: token
+                            token: token,
+                            dato: userFound
                           });
                         } else {
                           //....No Encontre usario Creo uno nuevo..........
@@ -277,7 +281,8 @@ function _login() {
                                         res.json({
                                           message: 'Usuario Creado.Login Success.',
                                           status: 1,
-                                          token: _token
+                                          token: _token,
+                                          dato: nuevoUsuario
                                         });
                                       } else {
                                         res.json({
@@ -351,7 +356,7 @@ function _login() {
                 pass: pass,
                 rol: rol
               },
-              attributes: ['id', 'nombre', 'mail', 'pass', 'rol']
+              attributes: ['nombre', 'pass', 'mail', 'rol', 'puntaje', 'nivel', 'foto', 'cantEnvios', 'redsocial', 'uidfirebase']
             });
 
           case 8:
@@ -364,7 +369,8 @@ function _login() {
               res.json({
                 message: 'Login Success.',
                 status: 1,
-                token: token
+                token: token,
+                dato: userFound
               });
             } else {
               res.json({
@@ -480,7 +486,7 @@ function _ensureToken() {
       while (1) {
         switch (_context8.prev = _context8.next) {
           case 0:
-            bearerHeader = req.headers['authorization'];
+            bearerHeader = req.headers['token'];
 
             if (typeof bearerHeader !== 'undefined') {
               bearer = bearerHeader.split(" ");

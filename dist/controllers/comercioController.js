@@ -37,11 +37,12 @@ function _getAll() {
             if (comercios) {
               res.json({
                 message: 'todos los comercios registrados',
-                comercios: comercios
-              }); //res.json(['John', 'Betty', 'Hal']);
+                data: comercios
+              });
             } else {
               res.status(500).json({
-                message: 'No se encontro registros de comercios.'
+                message: 'No se encontro registros de comercios.',
+                data: {}
               });
             }
 

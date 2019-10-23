@@ -9,13 +9,13 @@ import {
 
 
 import { 
-     ensureToken,chequeoToken
+     ensureToken
     } from '../controllers/userController';
 
 
 /** Rutas */
 /** Obtener todos los productos */
-router.get('/all', ensureToken,chequeoToken,getAll );
+router.get('/all', ensureToken,getAll );
 
 
 export default router

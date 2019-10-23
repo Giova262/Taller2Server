@@ -7,6 +7,9 @@ const Comercio= sequelize.define('comercio',{
         type: Sequelize.INTEGER,
         primaryKey: true
     },
+    com_nombre:{
+        type: Sequelize.TEXT
+    },
     com_direccion:{
         type: Sequelize.TEXT
     },

@@ -17,6 +17,6 @@ var router = (0, _express.Router)();
 /** Rutas */
 
 /** Obtener todos los productos */
-router.get('/all', _userController.ensureToken, _userController.chequeoToken, _comercioController.getAll);
+router.get('/all', _userController.ensureToken, _comercioController.getAll);
 var _default = router;
 exports["default"] = _default;
