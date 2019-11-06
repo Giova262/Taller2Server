@@ -48,11 +48,12 @@ function _getProductosPorComercio() {
             if (productos) {
               res.json({
                 message: 'todos los productos registrados del comercio',
-                productos: productos
+                data: productos
               });
             } else {
               res.status(500).json({
-                message: 'No se encontro registros de productos.'
+                message: 'No se encontro registros de productos.',
+                data: {}
               });
             }
 

@@ -22,25 +22,25 @@ import {
    
 /* Rutas */
 /*obtener todos los pedidos*/
-router.get('/all',ensureToken,chequeoToken,all);
+router.get('/all',ensureToken,all);
 
 /* Obtengo el precio del envio antes de dar el registro del mismo en pendiente*/
-router.get('/getPrecioEnvio',ensureToken,chequeoToken,getPrecioEnvio);
+router.get('/getPrecioEnvio',ensureToken,getPrecioEnvio);
 
 /* registrarPedido */
-router.post('/registrarPedido',ensureToken,chequeoToken,registrarPedido);
+router.post('/registrarPedido',ensureToken,registrarPedido);
 
 /* Obtener pedido por idUsuario */
-router.get('/getPedidosUsuario/:idUsuario',ensureToken,chequeoToken, getPedidosUsuario);
+router.get('/getPedidosUsuario/:idUsuario',ensureToken, getPedidosUsuario);
 
 /* Obtener pedido por idDelivery */
-router.get('/getPedidosDelivery/:idDelivery',ensureToken,chequeoToken, getPedidosDelivery);
+router.get('/getPedidosDelivery/:idDelivery',ensureToken, getPedidosDelivery);
 
 /* Obtener pedidos cercanos al Delivery */
-router.get('/getPedidosPendientesParaDelivery/',ensureToken,chequeoToken, getPedidosPendientesParaDelivery);
+router.get('/getPedidosPendientesParaDelivery/',ensureToken, getPedidosPendientesParaDelivery);
 
 /* setear pedido tomad por idDelivery */
-router.post('/asignarPedidoADelivery/',ensureToken,chequeoToken, asignarPedidoADelivery);
+router.post('/asignarPedidoADelivery/',ensureToken, asignarPedidoADelivery);
 
 
  /* Exporto */

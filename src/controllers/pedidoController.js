@@ -31,7 +31,7 @@ export async function all(req, res)
 }
 
 
-//obtengo los pedidos de usuario solicita pedido
+//obtengo los pedidos de un usuario en especifico
 export async function getPedidosUsuario(req, res)
 {
     
@@ -133,9 +133,12 @@ export async function getPedidosDelivery(req, res)
 
 
 //registro el pedido pendiente
-export async function registrarPedido(req, res)
-{  
+export async function registrarPedido(req, res){  
+
 var {iduser,diri,dirf,lati,longi,latf,longf,items} = req.body;
+
+console.log(items)
+
 var pesoxkm=1
   try{
 
@@ -191,9 +194,14 @@ var pesoxkm=1
             {
               //saco el string del json
               var stringJson=items[i];
+              //var stringJson = JSON.parse(items[i]);
+              //console.log("Items"+stringJson)
               //valores id y cantidad
               const idProducto= stringJson.id
               const cantidad  = stringJson.cantidad
+
+              /*console.log("idproducto: "+idProducto)
+              console.log("cantidad :"+cantidad)*/
               //busco los datos del producto
               const productFound = await Producto.findOne({
                     where: {
@@ -238,15 +246,23 @@ var pesoxkm=1
   if(pedidoUpdate)
      {      
      //devuelvo el id pedido y el total
-    res.json(
-    {
-    message:'pedido pendiente',
+     console.log("Pedido registrado")
+
+    /*res.json(
+     {
+      message:'Pedido Registrado Correctamente Estado Pendiente',
      idpedido,total,envio
-     })
+     })*/
+
+     res.json({
+      message:'Pedido Registrado Correctamente Estado Pendiente',
+      data:pedidoUpdate  
+    })
     
     }
     else
     {
+      console.log("Pedido NO registrado")
        //devuelvo el id pedido y el total
        res.status(500).json({
         message:'no se pudo hacer el update',

@@ -20,13 +20,13 @@
 
 /** Rutas */
    /** Obtener todos los productos */
-   router.get('/all', ensureToken,chequeoToken,getAll );
+   router.get('/all', ensureToken,getAll );
    
    /* Obtengo los productos de un idcomercio*/
-   router.get('/productosPorComercio/:idcomercio',ensureToken,chequeoToken, getProductosPorComercio);
+   router.get('/productosPorComercio/:idcomercio',ensureToken, getProductosPorComercio);
    
    /* Obtengo los productos de un idpedido*/
-   router.get('/productosPorPedido/:idpedido',ensureToken,chequeoToken, getProductosPorPedido);
+   router.get('/productosPorPedido/:idpedido',ensureToken, getProductosPorPedido);
    
 
    export default router

@@ -16,7 +16,8 @@ import {
     getOne,
     chequeoToken,
     getDeliverysPorUsuario,
-    getUsuariosPorDelivery
+    getUsuariosPorDelivery,
+    updateUser
     } from '../controllers/userController';
 
     /** Rutas */
@@ -38,10 +39,13 @@ router.get('/consulta',ensureToken,consultaPerfil);
 
 
 /** consultar usuarios deliverys de pedidos por userid */
-router.get('/getDeliverysPorUsuario/:iduser',ensureToken,chequeoToken, getDeliverysPorUsuario);
+router.get('/getDeliverysPorUsuario/:iduser',ensureToken, getDeliverysPorUsuario);
 
 /** consultar usuarios deliverys de pedidos por deliveryid */
-router.get('/getUsuariosPorDelivery/:iddelivery',ensureToken,chequeoToken, getUsuariosPorDelivery);
+router.get('/getUsuariosPorDelivery/:iddelivery',ensureToken, getUsuariosPorDelivery);
+
+/** Actualizar usuario*/
+router.put('/:id',ensureToken, updateUser );
 
 
 

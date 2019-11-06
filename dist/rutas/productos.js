@@ -18,12 +18,12 @@ var router = (0, _express.Router)();
 /** Rutas */
 
 /** Obtener todos los productos */
-router.get('/all', _userController.ensureToken, _userController.chequeoToken, _productoController.getAll);
+router.get('/all', _userController.ensureToken, _productoController.getAll);
 /* Obtengo los productos de un idcomercio*/
 
-router.get('/productosPorComercio/:idcomercio', _userController.ensureToken, _userController.chequeoToken, _productoController.getProductosPorComercio);
+router.get('/productosPorComercio/:idcomercio', _userController.ensureToken, _productoController.getProductosPorComercio);
 /* Obtengo los productos de un idpedido*/
 
-router.get('/productosPorPedido/:idpedido', _userController.ensureToken, _userController.chequeoToken, _productoController.getProductosPorPedido);
+router.get('/productosPorPedido/:idpedido', _userController.ensureToken, _productoController.getProductosPorPedido);
 var _default = router;
 exports["default"] = _default;

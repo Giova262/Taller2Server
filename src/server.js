@@ -23,6 +23,7 @@ app.use('/api/user',rutasUsuario)
 app.use('/api/producto',rutasProductos)
 app.use('/api/pedido',rutasPedidos)
 app.use('/api/comercio',rutasComercios)
+
 app.get('/', function(req, res){
     res.json({
 

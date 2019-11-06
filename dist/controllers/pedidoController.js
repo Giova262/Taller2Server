@@ -27,7 +27,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 function all(_x, _x2) {
   return _all.apply(this, arguments);
-} //obtengo los pedidos de usuario solicita pedido
+} //obtengo los pedidos de un usuario en especifico
 
 
 function _all() {
@@ -210,8 +210,9 @@ function _registrarPedido() {
         switch (_context4.prev = _context4.next) {
           case 0:
             _req$body2 = req.body, iduser = _req$body2.iduser, diri = _req$body2.diri, dirf = _req$body2.dirf, lati = _req$body2.lati, longi = _req$body2.longi, latf = _req$body2.latf, longf = _req$body2.longf, items = _req$body2.items;
+            console.log(items);
             pesoxkm = 1;
-            _context4.prev = 2;
+            _context4.prev = 3;
             iddelivery = 0;
             total = 0;
             envio = 0; //estadopedido=1 pendiente       
@@ -219,7 +220,7 @@ function _registrarPedido() {
             estadopedido = 1; //creo el pedido con total=0
 
             idpedido = 0;
-            _context4.next = 10;
+            _context4.next = 11;
             return _Pedido["default"].create({
               ped_userid: iduser,
               ped_deliveryid: iddelivery,
@@ -236,11 +237,11 @@ function _registrarPedido() {
               fields: ['ped_userid', 'ped_deliveryid', 'ped_total', 'ped_envio', 'ped_direccioninicio', 'ped_direcciondestino', 'ped_latitudinicio', 'ped_longitudinicio', 'ped_latituddestino', 'ped_longituddestino', 'ped_longituddestino', 'ped_estado']
             });
 
-          case 10:
+          case 11:
             nuevoPedido = _context4.sent;
 
             if (!nuevoPedido) {
-              _context4.next = 35;
+              _context4.next = 36;
               break;
             }
 
@@ -249,19 +250,24 @@ function _registrarPedido() {
             i = 0;
             numItems = items.length; //saco todos los items
 
-          case 15:
+          case 16:
             if (!(i < numItems)) {
-              _context4.next = 30;
+              _context4.next = 31;
               break;
             }
 
             //saco el string del json
-            stringJson = items[i]; //valores id y cantidad
+            stringJson = items[i]; //var stringJson = JSON.parse(items[i]);
+            //console.log("Items"+stringJson)
+            //valores id y cantidad
 
             idProducto = stringJson.id;
-            cantidad = stringJson.cantidad; //busco los datos del producto
+            cantidad = stringJson.cantidad;
+            /*console.log("idproducto: "+idProducto)
+            console.log("cantidad :"+cantidad)*/
+            //busco los datos del producto
 
-            _context4.next = 21;
+            _context4.next = 22;
             return _Producto["default"].findOne({
               where: {
                 prod_id: idProducto
@@ -269,15 +275,15 @@ function _registrarPedido() {
               attributes: ['prod_value']
             });
 
-          case 21:
+          case 22:
             productFound = _context4.sent;
 
             if (!productFound) {
-              _context4.next = 27;
+              _context4.next = 28;
               break;
             }
 
-            _context4.next = 25;
+            _context4.next = 26;
             return _Item["default"].create({
               item_pedidoid: idpedido,
               item_productoid: idProducto,
@@ -286,7 +292,7 @@ function _registrarPedido() {
               fields: ['item_pedidoid', 'item_productoid', 'item_cantidad']
             });
 
-          case 25:
+          case 26:
             nuevoitem = _context4.sent;
 
             if (nuevoitem) {
@@ -294,16 +300,16 @@ function _registrarPedido() {
               total += value * cantidad;
             }
 
-          case 27:
+          case 28:
             //incremento 
             i = i + 1;
-            _context4.next = 15;
+            _context4.next = 16;
             break;
 
-          case 30:
+          case 31:
             envio = pesoxkm * parseInt((0, _Service.getKilometros)(latf, longf, lati, longi)); //hago el update del total del pedido  
 
-            _context4.next = 33;
+            _context4.next = 34;
             return _Pedido["default"].update({
               ped_total: total,
               ped_envio: envio
@@ -313,19 +319,25 @@ function _registrarPedido() {
               }
             });
 
-          case 33:
+          case 34:
             pedidoUpdate = _context4.sent;
 
             if (pedidoUpdate) {
               //devuelvo el id pedido y el total
+              console.log("Pedido registrado");
+              /*res.json(
+               {
+                message:'Pedido Registrado Correctamente Estado Pendiente',
+               idpedido,total,envio
+               })*/
+
               res.json({
-                message: 'pedido pendiente',
-                idpedido: idpedido,
-                total: total,
-                envio: envio
+                message: 'Pedido Registrado Correctamente Estado Pendiente',
+                data: pedidoUpdate
               });
             } else {
-              //devuelvo el id pedido y el total
+              console.log("Pedido NO registrado"); //devuelvo el id pedido y el total
+
               res.status(500).json({
                 message: 'no se pudo hacer el update',
                 data: {
@@ -334,24 +346,24 @@ function _registrarPedido() {
               });
             }
 
-          case 35:
-            _context4.next = 40;
+          case 36:
+            _context4.next = 41;
             break;
 
-          case 37:
-            _context4.prev = 37;
-            _context4.t0 = _context4["catch"](2);
+          case 38:
+            _context4.prev = 38;
+            _context4.t0 = _context4["catch"](3);
             res.status(500).json({
               message: 'no se pudo registrar el pedido',
               data: _context4.t0
             });
 
-          case 40:
+          case 41:
           case "end":
             return _context4.stop();
         }
       }
-    }, _callee4, null, [[2, 37]]);
+    }, _callee4, null, [[3, 38]]);
   }));
   return _registrarPedido.apply(this, arguments);
 }

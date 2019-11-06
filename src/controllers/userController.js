@@ -14,6 +14,63 @@ admin.initializeApp({
 
 //...............................................................
 
+/** actualizar usuario */
+export async function updateUser(req,res){
+   
+    const { id,nombre,mail,pass,rol,foto,redsocial } = req.body;
+
+    try {
+
+         await Test.findOne({
+            where: {
+                
+                id:id
+            },
+            attributes: [ 
+                'id',
+                'nombre',
+            'pass',
+            'mail',
+            'rol',
+            'puntaje',
+            'nivel',
+            'foto',
+            'cantEnvios',
+            'redsocial',
+            'uidfirebase']
+          })
+          .then( async user => {
+
+            const userChanged = await user.update({
+
+                nombre:nombre,
+                mail:mail,
+                pass:pass,
+                rol:rol,
+                foto:foto,
+                redsocial:redsocial
+
+            });
+
+            res.json({
+                message:'Usuario Cambiado Success.', 
+                   
+            })
+            
+
+          });
+        
+    } catch (error) {
+
+        console.log(error)
+        res.status(500).json({
+            message:'Something goes wrong on getAll patch',
+            data:{error}
+        });
+    }
+
+}
+
 /** Obtener todos los Usuarios */
 export async function getAll(req,res){
 
@@ -102,6 +159,8 @@ export async function register(req,res){
 export async function login(req,res){
 
     const { mail,pass,rol,idToken } = req.body;
+
+    
   
     if(idToken != -1 ) {
 
@@ -121,7 +180,8 @@ export async function login(req,res){
                             uidfirebase:uid,
                             rol:rol
                         },
-                        attributes: [ 'nombre',
+                        attributes: [ 'id',
+                        'nombre',
                         'pass',
                         'mail',
                         'rol',
@@ -181,7 +241,8 @@ export async function login(req,res){
                                     
                                     },
                                     {
-                                        fields:[                                          
+                                        fields:[   
+                                            'id',                                       
                                             'nombre',
                                             'pass',
                                             'mail',
@@ -248,6 +309,8 @@ export async function login(req,res){
 
     // ..........Logeo sin Red Social..............
 
+    
+
         try {
 
             const userFound = await Test.findOne({
@@ -256,7 +319,9 @@ export async function login(req,res){
                     pass:pass,
                     rol:rol
                 },
-                attributes: [ 'nombre',
+                attributes: [ 
+                    'id',
+                    'nombre',
                 'pass',
                 'mail',
                 'rol',
@@ -269,6 +334,8 @@ export async function login(req,res){
             });
         
             if(userFound){
+
+                
         
                const token = jwt.sign({userFound}, 'key' );
         
@@ -359,7 +426,17 @@ export async function getOne(req,res,next)
             where: {
                 id:id
             },
-            attributes: ['id','nombre','mail','pass']
+            attributes: ['id',
+            'nombre',
+            'pass',
+            'mail',
+            'rol',
+            'puntaje',
+            'nivel',
+            'foto',
+            'cantEnvios',
+            'redsocial',
+            'uidfirebase']
         });
 
         if(userFound){
