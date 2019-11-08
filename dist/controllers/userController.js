@@ -358,7 +358,7 @@ function _login() {
                                         redsocial: redsocial,
                                         uidfirebase: uidfirebase
                                       }, {
-                                        fields: ['id', 'nombre', 'pass', 'mail', 'rol', 'puntaje', 'nivel', 'foto', 'cantEnvios', 'redsocial', 'uidfirebase']
+                                        fields: ['nombre', 'pass', 'mail', 'rol', 'puntaje', 'nivel', 'foto', 'cantEnvios', 'redsocial', 'uidfirebase']
                                       });
 
                                     case 13:
@@ -382,18 +382,19 @@ function _login() {
                                         });
                                       }
 
-                                      _context5.next = 20;
+                                      _context5.next = 21;
                                       break;
 
                                     case 17:
                                       _context5.prev = 17;
                                       _context5.t0 = _context5["catch"](10);
+                                      console.log("Errorr Al crear el usuario" + _context5.t0);
                                       res.status(500).json({
                                         message: 'Ocurrio un Error al crear usuario',
                                         error: _context5.t0
                                       });
 
-                                    case 20:
+                                    case 21:
                                     case "end":
                                       return _context5.stop();
                                   }
@@ -409,18 +410,19 @@ function _login() {
                           });
                         }
 
-                        _context6.next = 11;
+                        _context6.next = 12;
                         break;
 
                       case 8:
                         _context6.prev = 8;
                         _context6.t0 = _context6["catch"](1);
+                        console.log("Errorr ");
                         res.status(500).json({
                           message: 'Something goes wrong222',
                           data: _context6.t0
                         });
 
-                      case 11:
+                      case 12:
                       case "end":
                         return _context6.stop();
                     }

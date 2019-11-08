@@ -38,6 +38,9 @@ router.get('/getPedidosPendientesParaDelivery/', _userController.ensureToken, _p
 /* setear pedido tomad por idDelivery */
 
 router.post('/asignarPedidoADelivery/', _userController.ensureToken, _pedidoController.asignarPedidoADelivery);
+/** Obtener Historial del delivery*/
+
+router.get('/getHistorialDelivery/:idDelivery', _userController.ensureToken, _pedidoController.getPedidosHistorialDelivery);
 /* Exporto */
 
 var _default = router;

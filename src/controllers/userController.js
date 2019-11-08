@@ -242,7 +242,7 @@ export async function login(req,res){
                                     },
                                     {
                                         fields:[   
-                                            'id',                                       
+                                                                                  
                                             'nombre',
                                             'pass',
                                             'mail',
@@ -276,7 +276,7 @@ export async function login(req,res){
                                 }
                                 
                             } catch (error) {
-                               
+                                console.log( "Errorr Al crear el usuario" + error)
                                 res.status(500).json({
                                     message:'Ocurrio un Error al crear usuario',                       
                                     error:error
@@ -292,6 +292,7 @@ export async function login(req,res){
                  
                 } catch (error) {
 
+                    console.log( "Errorr ")
                     res.status(500).json({
                         message:'Something goes wrong222',
                         data:error

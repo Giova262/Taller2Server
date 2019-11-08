@@ -91,7 +91,62 @@ export async function getPedidosDelivery(req, res)
 
         let pedidos = await Pedido.findAll({
             where: {
-              ped_deliveryid:idDelivery
+              ped_deliveryid:idDelivery,
+              ped_estado: 2
+
+            },
+            attributes: [
+              'ped_id',
+              'ped_userid',
+              'ped_deliveryid',
+              'ped_total',
+              'ped_envio',
+              'ped_direccioninicio',
+              'ped_direcciondestino',
+              'ped_latitudinicio',
+              'ped_longitudinicio',
+              'ped_latituddestino',
+              'ped_longituddestino',
+              'ped_longituddestino',  
+              'ped_estado'
+           ]
+        });
+
+        if(pedidos){
+    
+          res.json({
+            message:'pedidos del delivery',
+            pedidos});
+               
+
+        }else{
+            res.json({
+                message:'No se encontro registros de pedidos.'      
+            })
+        }
+        
+    } catch (error) {
+        res.status(500).json({
+            message:'algo no funciono',
+            data:idDelivery
+        });
+    }
+}
+
+//Historial de pedidos entregados por un delivery en especifico
+
+export async function getPedidosHistorialDelivery(req, res)
+{
+    
+    const {idDelivery} = req.params;
+   
+    try {
+
+        let pedidos = await Pedido.findAll({
+            where: {
+              ped_deliveryid:idDelivery,
+              ped_estado: 3
+
             },
             attributes: [
               'ped_id',
@@ -289,7 +344,7 @@ export async function getPedidosPendientesParaDelivery(req, res)
 {
   var {lati,longi} = req.body;
   var estadopedido=1
-  var maxkms=20
+  var maxkms=20000000
 
   try {
    /*hay que usar lati y longi para buscar los pedidos cercanos */
@@ -333,7 +388,7 @@ export async function getPedidosPendientesParaDelivery(req, res)
           res.json(
           {
             message:'pedidos pendientes son:',
-            pedidoscercanos
+            pedidos
           })
 
 
@@ -354,7 +409,11 @@ export async function getPedidosPendientesParaDelivery(req, res)
 //asignacion de pedido a delivery
 export async function asignarPedidoADelivery(req, res)
 {
+
+
 var {idpedido,iddelivery} = req.body;  
+
+console.log("id del delivery :"+iddelivery)
 var estadoPendiente=1;  
 var estadoAsignado=2;
 try
@@ -373,7 +432,7 @@ if(pedidosSinAsignar>0)
    //hago el update del pedido  
     let pedidoUpdate=await Pedido.update(
     {
-    ped_deliveryid: iddelivery,
+      ped_deliveryid: iddelivery,
     ped_estado:estadoAsignado
    },
   { 
@@ -386,7 +445,7 @@ if(pedidosSinAsignar>0)
    //devuelvo el id pedido y el delivery
    res.json(
     {
-    message:'pedido asignado',
+    message:'Pedido asignado',
     idpedido,iddelivery
      })
   }

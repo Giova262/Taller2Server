@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.all = all;
 exports.getPedidosUsuario = getPedidosUsuario;
 exports.getPedidosDelivery = getPedidosDelivery;
+exports.getPedidosHistorialDelivery = getPedidosHistorialDelivery;
 exports.registrarPedido = registrarPedido;
 exports.getPedidosPendientesParaDelivery = getPedidosPendientesParaDelivery;
 exports.asignarPedidoADelivery = asignarPedidoADelivery;
@@ -137,7 +138,7 @@ function _getPedidosUsuario() {
 
 function getPedidosDelivery(_x5, _x6) {
   return _getPedidosDelivery.apply(this, arguments);
-} //registro el pedido pendiente
+} //Historial de pedidos entregados por un delivery en especifico
 
 
 function _getPedidosDelivery() {
@@ -154,7 +155,8 @@ function _getPedidosDelivery() {
             _context3.next = 4;
             return _Pedido["default"].findAll({
               where: {
-                ped_deliveryid: idDelivery
+                ped_deliveryid: idDelivery,
+                ped_estado: 2
               },
               attributes: ['ped_id', 'ped_userid', 'ped_deliveryid', 'ped_total', 'ped_envio', 'ped_direccioninicio', 'ped_direcciondestino', 'ped_latitudinicio', 'ped_longitudinicio', 'ped_latituddestino', 'ped_longituddestino', 'ped_longituddestino', 'ped_estado']
             });
@@ -194,7 +196,67 @@ function _getPedidosDelivery() {
   return _getPedidosDelivery.apply(this, arguments);
 }
 
-function registrarPedido(_x7, _x8) {
+function getPedidosHistorialDelivery(_x7, _x8) {
+  return _getPedidosHistorialDelivery.apply(this, arguments);
+} //registro el pedido pendiente
+
+
+function _getPedidosHistorialDelivery() {
+  _getPedidosHistorialDelivery = _asyncToGenerator(
+  /*#__PURE__*/
+  regeneratorRuntime.mark(function _callee4(req, res) {
+    var idDelivery, pedidos;
+    return regeneratorRuntime.wrap(function _callee4$(_context4) {
+      while (1) {
+        switch (_context4.prev = _context4.next) {
+          case 0:
+            idDelivery = req.params.idDelivery;
+            _context4.prev = 1;
+            _context4.next = 4;
+            return _Pedido["default"].findAll({
+              where: {
+                ped_deliveryid: idDelivery,
+                ped_estado: 3
+              },
+              attributes: ['ped_id', 'ped_userid', 'ped_deliveryid', 'ped_total', 'ped_envio', 'ped_direccioninicio', 'ped_direcciondestino', 'ped_latitudinicio', 'ped_longitudinicio', 'ped_latituddestino', 'ped_longituddestino', 'ped_longituddestino', 'ped_estado']
+            });
+
+          case 4:
+            pedidos = _context4.sent;
+
+            if (pedidos) {
+              res.json({
+                message: 'pedidos del delivery',
+                pedidos: pedidos
+              });
+            } else {
+              res.json({
+                message: 'No se encontro registros de pedidos.'
+              });
+            }
+
+            _context4.next = 11;
+            break;
+
+          case 8:
+            _context4.prev = 8;
+            _context4.t0 = _context4["catch"](1);
+            res.status(500).json({
+              message: 'algo no funciono',
+              data: idDelivery
+            });
+
+          case 11:
+          case "end":
+            return _context4.stop();
+        }
+      }
+    }, _callee4, null, [[1, 8]]);
+  }));
+  return _getPedidosHistorialDelivery.apply(this, arguments);
+}
+
+function registrarPedido(_x9, _x10) {
   return _registrarPedido.apply(this, arguments);
 } //obtengo los pedidos pendientes cercanos.
 
@@ -202,17 +264,17 @@ function registrarPedido(_x7, _x8) {
 function _registrarPedido() {
   _registrarPedido = _asyncToGenerator(
   /*#__PURE__*/
-  regeneratorRuntime.mark(function _callee4(req, res) {
+  regeneratorRuntime.mark(function _callee5(req, res) {
     var _req$body2, iduser, diri, dirf, lati, longi, latf, longf, items, pesoxkm, iddelivery, total, envio, estadopedido, idpedido, nuevoPedido, i, numItems, stringJson, idProducto, cantidad, productFound, nuevoitem, value, pedidoUpdate;
 
-    return regeneratorRuntime.wrap(function _callee4$(_context4) {
+    return regeneratorRuntime.wrap(function _callee5$(_context5) {
       while (1) {
-        switch (_context4.prev = _context4.next) {
+        switch (_context5.prev = _context5.next) {
           case 0:
             _req$body2 = req.body, iduser = _req$body2.iduser, diri = _req$body2.diri, dirf = _req$body2.dirf, lati = _req$body2.lati, longi = _req$body2.longi, latf = _req$body2.latf, longf = _req$body2.longf, items = _req$body2.items;
             console.log(items);
             pesoxkm = 1;
-            _context4.prev = 3;
+            _context5.prev = 3;
             iddelivery = 0;
             total = 0;
             envio = 0; //estadopedido=1 pendiente       
@@ -220,7 +282,7 @@ function _registrarPedido() {
             estadopedido = 1; //creo el pedido con total=0
 
             idpedido = 0;
-            _context4.next = 11;
+            _context5.next = 11;
             return _Pedido["default"].create({
               ped_userid: iduser,
               ped_deliveryid: iddelivery,
@@ -238,10 +300,10 @@ function _registrarPedido() {
             });
 
           case 11:
-            nuevoPedido = _context4.sent;
+            nuevoPedido = _context5.sent;
 
             if (!nuevoPedido) {
-              _context4.next = 36;
+              _context5.next = 36;
               break;
             }
 
@@ -252,7 +314,7 @@ function _registrarPedido() {
 
           case 16:
             if (!(i < numItems)) {
-              _context4.next = 31;
+              _context5.next = 31;
               break;
             }
 
@@ -267,7 +329,7 @@ function _registrarPedido() {
             console.log("cantidad :"+cantidad)*/
             //busco los datos del producto
 
-            _context4.next = 22;
+            _context5.next = 22;
             return _Producto["default"].findOne({
               where: {
                 prod_id: idProducto
@@ -276,14 +338,14 @@ function _registrarPedido() {
             });
 
           case 22:
-            productFound = _context4.sent;
+            productFound = _context5.sent;
 
             if (!productFound) {
-              _context4.next = 28;
+              _context5.next = 28;
               break;
             }
 
-            _context4.next = 26;
+            _context5.next = 26;
             return _Item["default"].create({
               item_pedidoid: idpedido,
               item_productoid: idProducto,
@@ -293,7 +355,7 @@ function _registrarPedido() {
             });
 
           case 26:
-            nuevoitem = _context4.sent;
+            nuevoitem = _context5.sent;
 
             if (nuevoitem) {
               value = productFound.prod_value;
@@ -303,13 +365,13 @@ function _registrarPedido() {
           case 28:
             //incremento 
             i = i + 1;
-            _context4.next = 16;
+            _context5.next = 16;
             break;
 
           case 31:
             envio = pesoxkm * parseInt((0, _Service.getKilometros)(latf, longf, lati, longi)); //hago el update del total del pedido  
 
-            _context4.next = 34;
+            _context5.next = 34;
             return _Pedido["default"].update({
               ped_total: total,
               ped_envio: envio
@@ -320,7 +382,7 @@ function _registrarPedido() {
             });
 
           case 34:
-            pedidoUpdate = _context4.sent;
+            pedidoUpdate = _context5.sent;
 
             if (pedidoUpdate) {
               //devuelvo el id pedido y el total
@@ -347,28 +409,28 @@ function _registrarPedido() {
             }
 
           case 36:
-            _context4.next = 41;
+            _context5.next = 41;
             break;
 
           case 38:
-            _context4.prev = 38;
-            _context4.t0 = _context4["catch"](3);
+            _context5.prev = 38;
+            _context5.t0 = _context5["catch"](3);
             res.status(500).json({
               message: 'no se pudo registrar el pedido',
-              data: _context4.t0
+              data: _context5.t0
             });
 
           case 41:
           case "end":
-            return _context4.stop();
+            return _context5.stop();
         }
       }
-    }, _callee4, null, [[3, 38]]);
+    }, _callee5, null, [[3, 38]]);
   }));
   return _registrarPedido.apply(this, arguments);
 }
 
-function getPedidosPendientesParaDelivery(_x9, _x10) {
+function getPedidosPendientesParaDelivery(_x11, _x12) {
   return _getPedidosPendientesParaDelivery.apply(this, arguments);
 } //asignacion de pedido a delivery
 
@@ -376,18 +438,18 @@ function getPedidosPendientesParaDelivery(_x9, _x10) {
 function _getPedidosPendientesParaDelivery() {
   _getPedidosPendientesParaDelivery = _asyncToGenerator(
   /*#__PURE__*/
-  regeneratorRuntime.mark(function _callee5(req, res) {
+  regeneratorRuntime.mark(function _callee6(req, res) {
     var _req$body3, lati, longi, estadopedido, maxkms, pedidos, pedidoscercanos;
 
-    return regeneratorRuntime.wrap(function _callee5$(_context5) {
+    return regeneratorRuntime.wrap(function _callee6$(_context6) {
       while (1) {
-        switch (_context5.prev = _context5.next) {
+        switch (_context6.prev = _context6.next) {
           case 0:
             _req$body3 = req.body, lati = _req$body3.lati, longi = _req$body3.longi;
             estadopedido = 1;
-            maxkms = 20;
-            _context5.prev = 3;
-            _context5.next = 6;
+            maxkms = 20000000;
+            _context6.prev = 3;
+            _context6.next = 6;
             return _Pedido["default"].findAll({
               where: {
                 ped_estado: estadopedido
@@ -396,7 +458,7 @@ function _getPedidosPendientesParaDelivery() {
             });
 
           case 6:
-            pedidos = _context5.sent;
+            pedidos = _context6.sent;
 
             if (pedidos) {
               //filtro los cercanos 
@@ -411,7 +473,7 @@ function _getPedidosPendientesParaDelivery() {
               });
               res.json({
                 message: 'pedidos pendientes son:',
-                pedidoscercanos: pedidoscercanos
+                pedidos: pedidos
               });
             } else {
               res.status(500).json({
@@ -419,30 +481,30 @@ function _getPedidosPendientesParaDelivery() {
               });
             }
 
-            _context5.next = 13;
+            _context6.next = 13;
             break;
 
           case 10:
-            _context5.prev = 10;
-            _context5.t0 = _context5["catch"](3);
+            _context6.prev = 10;
+            _context6.t0 = _context6["catch"](3);
             res.status(500).json({
               message: 'algo no funciono',
               data: {
-                error: _context5.t0
+                error: _context6.t0
               }
             });
 
           case 13:
           case "end":
-            return _context5.stop();
+            return _context6.stop();
         }
       }
-    }, _callee5, null, [[3, 10]]);
+    }, _callee6, null, [[3, 10]]);
   }));
   return _getPedidosPendientesParaDelivery.apply(this, arguments);
 }
 
-function asignarPedidoADelivery(_x11, _x12) {
+function asignarPedidoADelivery(_x13, _x14) {
   return _asignarPedidoADelivery.apply(this, arguments);
 }
 /* obtengo el precio del envio antes de dar el ok o no al registro 
@@ -452,18 +514,19 @@ pedido*/
 function _asignarPedidoADelivery() {
   _asignarPedidoADelivery = _asyncToGenerator(
   /*#__PURE__*/
-  regeneratorRuntime.mark(function _callee6(req, res) {
+  regeneratorRuntime.mark(function _callee7(req, res) {
     var _req$body4, idpedido, iddelivery, estadoPendiente, estadoAsignado, pedidosSinAsignar, pedidoUpdate;
 
-    return regeneratorRuntime.wrap(function _callee6$(_context6) {
+    return regeneratorRuntime.wrap(function _callee7$(_context7) {
       while (1) {
-        switch (_context6.prev = _context6.next) {
+        switch (_context7.prev = _context7.next) {
           case 0:
             _req$body4 = req.body, idpedido = _req$body4.idpedido, iddelivery = _req$body4.iddelivery;
+            console.log("id del delivery :" + iddelivery);
             estadoPendiente = 1;
             estadoAsignado = 2;
-            _context6.prev = 3;
-            _context6.next = 6;
+            _context7.prev = 4;
+            _context7.next = 7;
             return _Pedido["default"].count({
               where: {
                 ped_id: idpedido,
@@ -471,15 +534,15 @@ function _asignarPedidoADelivery() {
               }
             });
 
-          case 6:
-            pedidosSinAsignar = _context6.sent;
+          case 7:
+            pedidosSinAsignar = _context7.sent;
 
             if (!(pedidosSinAsignar > 0)) {
-              _context6.next = 14;
+              _context7.next = 15;
               break;
             }
 
-            _context6.next = 10;
+            _context7.next = 11;
             return _Pedido["default"].update({
               ped_deliveryid: iddelivery,
               ped_estado: estadoAsignado
@@ -489,13 +552,13 @@ function _asignarPedidoADelivery() {
               }
             });
 
-          case 10:
-            pedidoUpdate = _context6.sent;
+          case 11:
+            pedidoUpdate = _context7.sent;
 
             if (pedidoUpdate) {
               //devuelvo el id pedido y el delivery
               res.json({
-                message: 'pedido asignado',
+                message: 'Pedido asignado',
                 idpedido: idpedido,
                 iddelivery: iddelivery
               });
@@ -505,34 +568,34 @@ function _asignarPedidoADelivery() {
               });
             }
 
-            _context6.next = 15;
+            _context7.next = 16;
             break;
 
-          case 14:
+          case 15:
             res.status(500).json({
               message: 'El pedido ya fue asignado.'
             });
 
-          case 15:
-            _context6.next = 20;
+          case 16:
+            _context7.next = 21;
             break;
 
-          case 17:
-            _context6.prev = 17;
-            _context6.t0 = _context6["catch"](3);
+          case 18:
+            _context7.prev = 18;
+            _context7.t0 = _context7["catch"](4);
             res.status(500).json({
               message: 'algo no funciono',
               data: {
-                error: _context6.t0
+                error: _context7.t0
               }
             });
 
-          case 20:
+          case 21:
           case "end":
-            return _context6.stop();
+            return _context7.stop();
         }
       }
-    }, _callee6, null, [[3, 17]]);
+    }, _callee7, null, [[4, 18]]);
   }));
   return _asignarPedidoADelivery.apply(this, arguments);
 }
