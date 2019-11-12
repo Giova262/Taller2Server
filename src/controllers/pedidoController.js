@@ -1,8 +1,118 @@
 import Pedido from '../models/Pedido'
 import Producto from '../models/Producto'
+import User from '../models/User'
 import Item from '../models/Item'
 import {getKilometros, getPrecioEnvioPorReglas, getPorcentajeEnvioPorReglas}  from '../service/Service'
 //import jwt from 'jsonwebtoken'
+
+
+//Actualizar pedido
+export async function updatePedido(req, res){
+
+  const { ped_id,ped_userid,estado } = req.body;
+
+    try {
+
+      await Pedido.findOne({
+        where: {
+          ped_id:ped_id,
+          ped_userid:ped_userid
+         
+        },
+        attributes: [        
+          'ped_id',
+              'ped_userid',
+              'ped_deliveryid',
+              'ped_total',
+              'ped_envio',
+              'ped_direccioninicio',
+              'ped_direcciondestino',
+              'ped_latitudinicio',
+              'ped_longitudinicio',
+              'ped_latituddestino',
+              'ped_longituddestino',
+              'ped_longituddestino',  
+              'ped_estado'
+        ]
+
+      })
+      .then( async pedido => {
+
+        const pedidoChanged = await pedido.update({
+
+          ped_estado:3
+
+        });
+
+       
+
+        //Aca modifico al delivery y le doy puntos
+            try {
+
+              await User.findOne({
+                where: {
+                    
+                    id: pedido.ped_deliveryid 
+                },
+                attributes: [ 
+                    'id',
+                    'nombre',
+                'pass',
+                'mail',
+                'rol',
+                'puntaje',
+                'nivel',
+                'foto',
+                'cantEnvios',
+                'redsocial',
+                'uidfirebase']
+              })
+              .then( async user => {
+
+                var nuevoPuntaje = user.puntaje + 100
+                var nuevoLevel = user.nivel 
+
+                if( nuevoPuntaje >= 1000 ){
+                  nuevoLevel = nuevoLevel + 1
+                  nuevoPuntaje = 0
+                }
+                       
+                const userChanged = await user.update({
+            
+                    puntaje: nuevoPuntaje,
+                    nivel:nuevoLevel
+    
+                });
+    
+                res.json({
+                    message:'Usuario Cambiado Success.', 
+                        
+                })
+                
+    
+              });
+            
+        } catch (error) {
+    
+            console.log(error)
+            res.status(500).json({
+                message:'No pudo actualizar al deliery',
+                data:{error}
+            });
+        } 
+
+      });
+    
+  } catch (error) {
+  
+    res.status(500).json({
+        message:'Something goes wrong on getAll patch',
+        data:{error}
+    });
+  }
+
+  
+}
 
 
 // todos los pedidos sin ningun filtro.

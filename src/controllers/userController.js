@@ -268,7 +268,7 @@ export async function login(req,res){
                                     })
 
                                 }else{
-                                    res.json({
+                                    res.status(401).json({
                                         message:'Fallo al iniciar Sesion.Verifica Mail o Contraseña.',
                                         status: 0 ,
                                         token : "-1"       
@@ -348,7 +348,7 @@ export async function login(req,res){
                 })
     
             }else{
-                res.json({
+                res.status(401).json({
                     message:'Fallo al iniciar Sesion.Verifica Mail o Contraseña.',
                     status: 0,
                     token : "-1"    

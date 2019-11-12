@@ -41,6 +41,9 @@ router.post('/asignarPedidoADelivery/', _userController.ensureToken, _pedidoCont
 /** Obtener Historial del delivery*/
 
 router.get('/getHistorialDelivery/:idDelivery', _userController.ensureToken, _pedidoController.getPedidosHistorialDelivery);
+/** Pedido entregado */
+
+router.put('/', _userController.ensureToken, _pedidoController.updatePedido);
 /* Exporto */
 
 var _default = router;

@@ -37,7 +37,6 @@ router.post('/login', login );
 /** consultar perfil */
 router.get('/consulta',ensureToken,consultaPerfil);
 
-
 /** consultar usuarios deliverys de pedidos por userid */
 router.get('/getDeliverysPorUsuario/:iduser',ensureToken, getDeliverysPorUsuario);
 

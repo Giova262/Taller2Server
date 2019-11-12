@@ -13,7 +13,8 @@ import { all,
 		 getPedidosDelivery,
 		 getPedidosPendientesParaDelivery,
 		 asignarPedidoADelivery,
-		 getPedidosHistorialDelivery
+		 getPedidosHistorialDelivery,
+		 updatePedido
         } from '../controllers/pedidoController';
 
 import { 
@@ -46,6 +47,8 @@ router.post('/asignarPedidoADelivery/',ensureToken, asignarPedidoADelivery);
 /** Obtener Historial del delivery*/
 router.get('/getHistorialDelivery/:idDelivery',ensureToken, getPedidosHistorialDelivery);
 
+/** Pedido entregado */
+router.put('/',ensureToken,updatePedido);
 
  /* Exporto */
 export default router

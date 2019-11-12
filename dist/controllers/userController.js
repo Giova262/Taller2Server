@@ -375,7 +375,7 @@ function _login() {
                                           dato: nuevoUsuario
                                         });
                                       } else {
-                                        res.json({
+                                        res.status(401).json({
                                           message: 'Fallo al iniciar Sesion.Verifica Mail o Contraseña.',
                                           status: 0,
                                           token: "-1"
@@ -465,7 +465,7 @@ function _login() {
                 dato: userFound
               });
             } else {
-              res.json({
+              res.status(401).json({
                 message: 'Fallo al iniciar Sesion.Verifica Mail o Contraseña.',
                 status: 0,
                 token: "-1"
