@@ -1,9 +1,11 @@
-
+import Parametro from '../models/Parametro'
 import nools  from 'nools';
-const flowUser = nools.compile(require.resolve('../../res/user_reglas.nools'));
+
+/* reglas*/
+const flowUser = nools.compile(require.resolve('../res/user_reglas.nools'));
 const UserDatos = flowUser.getDefined('UsuarioDatos');
 
-const flowDelivery = nools.compile(require.resolve('../../res/delivery_reglas.nools'));
+const flowDelivery = nools.compile(require.resolve('../res/delivery_reglas.nools'));
 const DeliveryDatos = flowDelivery.getDefined('DeliveryDatos');
 
 export function getPrecioEnvioPorReglas(ndia, hora, envio, kms, cantPedidos,nivel, points)
@@ -42,27 +44,40 @@ export function getPorcentajeEnvioPorReglas(ndia, hora, envio, cantidadEnviosDia
       }
 
 
-
-
-
-
-
-
-
 //devuelve los kms entre dos posiciones
 export function getKilometros (lat1 , lon1, lat2, lon2)
 {
 //local
 function rad  (x) {return x*Math.PI/180;}
  //radio de la tierra en km
-var R = 6.378137;
+var R = 6371;
 var dLat = rad( lat2 - lat1 );
 var dLong = rad( lon2 - lon1 );
 
 var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(rad(lat1)) * Math.cos(rad(lat2)) * Math.sin(dLong/2) * Math.sin(dLong/2);
 var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 var d = R * c;
-
 //retorna tres decimales
 return d.toFixed(3);
+}
+
+/* le paso el parametro a buscar y el default caso que no encuentre*/
+export async function getParametro(paramBuscar, valordefault=0)
+{
+try{
+  const param = await Parametro.findOne({
+    where: {
+      par_nombre:paramBuscar
+     },
+    attributes: ['par_id','par_nombre','par_value']
+});
+
+if(param) 
+  return param.par_value;
+
+return valordefault;
+    } 
+     catch (error) {
+     return valordefault;
+      }
 }

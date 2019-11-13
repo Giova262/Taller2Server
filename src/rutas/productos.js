@@ -1,5 +1,3 @@
-   /** Rutas de test */
-
    import {Router} from 'express'
 
    const router = Router()
@@ -9,7 +7,10 @@
    import {  
        getAll,
        getProductosPorComercio,
-       getProductosPorPedido
+       getProductosPorPedido,
+       deleteProducto,
+       updateProducto,
+       registrarProducto
        } from '../controllers/productoController';
    
    
@@ -20,13 +21,21 @@
 
 /** Rutas */
    /** Obtener todos los productos */
-   router.get('/all', ensureToken,getAll );
+   router.get('/all', ensureToken,chequeoToken,getAll );
    
    /* Obtengo los productos de un idcomercio*/
-   router.get('/productosPorComercio/:idcomercio',ensureToken, getProductosPorComercio);
+   router.get('/productosPorComercio/:idcomercio',ensureToken,chequeoToken, getProductosPorComercio);
    
    /* Obtengo los productos de un idpedido*/
-   router.get('/productosPorPedido/:idpedido',ensureToken, getProductosPorPedido);
+   router.get('/productosPorPedido/:idpedido',ensureToken,chequeoToken, getProductosPorPedido);
    
+   /* delete producto*/
+   router.delete('/',ensureToken,chequeoToken, deleteProducto);
 
+   /* update producto*/
+   router.put('/',ensureToken,chequeoToken,updateProducto);
+  
+   /* creo un producto*/
+   router.post('/', ensureToken,chequeoToken,registrarProducto);
+   
    export default router
