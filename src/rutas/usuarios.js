@@ -17,8 +17,7 @@ import {
     chequeoToken,
     getDeliverysPorUsuario,
     getUsuariosPorDelivery,
-    updateUser,
-    deleteUser
+    updateUser
     } from '../controllers/userController';
 
     /** Rutas */
@@ -36,19 +35,17 @@ router.post('/register', register );
 router.post('/login', login );
 
 /** consultar perfil */
-router.get('/consulta',ensureToken,chequeoToken,consultaPerfil);
+router.get('/consulta',ensureToken,consultaPerfil);
 
 /** consultar usuarios deliverys de pedidos por userid */
-router.get('/deliverysPorUsuario/:iduser',ensureToken,chequeoToken, getDeliverysPorUsuario);
+router.get('/getDeliverysPorUsuario/:iduser',ensureToken, getDeliverysPorUsuario);
 
 /** consultar usuarios deliverys de pedidos por deliveryid */
-router.get('/usuariosPorDelivery/:iddelivery',ensureToken,chequeoToken, getUsuariosPorDelivery);
+router.get('/getUsuariosPorDelivery/:iddelivery',ensureToken, getUsuariosPorDelivery);
 
 /** Actualizar usuario*/
-router.put('/',ensureToken,chequeoToken, updateUser );
+router.put('/:id',ensureToken, updateUser );
 
-/** borrar usuario*/
-router.delete('/',ensureToken,chequeoToken, deleteUser);
 
 
 /** Exporto */

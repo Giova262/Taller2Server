@@ -7,14 +7,13 @@ const router = Router()
 	seguramente falten.
 */
 import { all,
-	     getPorcentajeDelivery,
 	     getPrecioEnvio,
+		 registrarPedido,
 		 getPedidosUsuario,
 		 getPedidosDelivery,
 		 getPedidosPendientesParaDelivery,
 		 asignarPedidoADelivery,
-		 registrarPedido,
-		 deletePedido,
+		 getPedidosHistorialDelivery,
 		 updatePedido
         } from '../controllers/pedidoController';
 
@@ -25,34 +24,31 @@ import {
    
 /* Rutas */
 /*obtener todos los pedidos*/
-router.get('/all',ensureToken,chequeoToken,all);
-
-/* Obtengo el porcenaje del envio para del delivery*/
-router.get('/getPrecioEnvio',ensureToken,chequeoToken,getPorcentajeDelivery);
+router.get('/all',ensureToken,all);
 
 /* Obtengo el precio del envio antes de dar el registro del mismo en pendiente*/
-router.get('/getPorcentajeDelivery',ensureToken,chequeoToken,getPrecioEnvio);
+router.get('/getPrecioEnvio',ensureToken,getPrecioEnvio);
 
 /* registrarPedido */
-router.post('/registrarPedido',ensureToken,chequeoToken,registrarPedido);
+router.post('/registrarPedido',ensureToken,registrarPedido);
 
 /* Obtener pedido por idUsuario */
-router.get('/getPedidosUsuario/:idUsuario',ensureToken,chequeoToken, getPedidosUsuario);
+router.get('/getPedidosUsuario/:idUsuario',ensureToken, getPedidosUsuario);
 
 /* Obtener pedido por idDelivery */
-router.get('/getPedidosDelivery/:idDelivery',ensureToken,chequeoToken, getPedidosDelivery);
+router.get('/getPedidosDelivery/:idDelivery',ensureToken, getPedidosDelivery);
 
 /* Obtener pedidos cercanos al Delivery */
-router.get('/getPedidosPendientesParaDelivery/',ensureToken,chequeoToken, getPedidosPendientesParaDelivery);
+router.get('/getPedidosPendientesParaDelivery/',ensureToken, getPedidosPendientesParaDelivery);
 
-/* setear pedido toma por idDelivery */
-router.post('/asignarPedidoADelivery/',ensureToken,chequeoToken, asignarPedidoADelivery);
+/* setear pedido tomad por idDelivery */
+router.post('/asignarPedidoADelivery/',ensureToken, asignarPedidoADelivery);
 
-/* delete pedido*/
-router.delete('/',ensureToken,chequeoToken, deletePedido);
+/** Obtener Historial del delivery*/
+router.get('/getHistorialDelivery/:idDelivery',ensureToken, getPedidosHistorialDelivery);
 
-/* update pedido*/
-router.put('/',ensureToken,chequeoToken,updatePedido);
+/** Pedido entregado */
+router.put('/',ensureToken,updatePedido);
 
  /* Exporto */
 export default router
