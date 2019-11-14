@@ -16,7 +16,16 @@ var router = (0, _express.Router)();
 
 /** Rutas */
 
-/** Obtener todos los productos */
-router.get('/all', _userController.ensureToken, _comercioController.getAll);
+/* Obtener todos los comercios */
+router.get('/all', _userController.ensureToken, _userController.chequeoToken, _comercioController.getAll);
+/* delete comercio*/
+
+router["delete"]('/:id', _userController.ensureToken, _userController.chequeoToken, _comercioController.deleteComercio);
+/* update comercio*/
+
+router.put('/', _userController.ensureToken, _userController.chequeoToken, _comercioController.updateComercio);
+/* creo un comercio*/
+
+router.post('/', _userController.ensureToken, _userController.chequeoToken, _comercioController.registrarComercio);
 var _default = router;
 exports["default"] = _default;

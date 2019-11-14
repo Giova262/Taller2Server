@@ -12,6 +12,8 @@ exports.registrarPedido = registrarPedido;
 exports.getPedidosPendientesParaDelivery = getPedidosPendientesParaDelivery;
 exports.asignarPedidoADelivery = asignarPedidoADelivery;
 exports.getPrecioEnvio = getPrecioEnvio;
+exports.getPorcentajeDelivery = getPorcentajeDelivery;
+exports.deletePedido = deletePedido;
 
 var _Pedido = _interopRequireDefault(require("../models/Pedido"));
 
@@ -21,7 +23,9 @@ var _User = _interopRequireDefault(require("../models/User"));
 
 var _Item = _interopRequireDefault(require("../models/Item"));
 
-var _Service = require("../service/Service");
+var _parametro = _interopRequireDefault(require("../models/parametro"));
+
+var _service = require("../service/service");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
@@ -38,13 +42,13 @@ function _updatePedido() {
   _updatePedido = _asyncToGenerator(
   /*#__PURE__*/
   regeneratorRuntime.mark(function _callee3(req, res) {
-    var _req$body2, ped_id, ped_userid, estado;
+    var _req$body, ped_id, ped_userid, estado;
 
     return regeneratorRuntime.wrap(function _callee3$(_context3) {
       while (1) {
         switch (_context3.prev = _context3.next) {
           case 0:
-            _req$body2 = req.body, ped_id = _req$body2.ped_id, ped_userid = _req$body2.ped_userid, estado = _req$body2.estado;
+            _req$body = req.body, ped_id = _req$body.ped_id, ped_userid = _req$body.ped_userid, estado = _req$body.estado;
             _context3.prev = 1;
             _context3.next = 4;
             return _Pedido["default"].findOne({
@@ -117,7 +121,7 @@ function _updatePedido() {
                             }, _callee);
                           }));
 
-                          return function (_x18) {
+                          return function (_x24) {
                             return _ref2.apply(this, arguments);
                           };
                         }());
@@ -145,7 +149,7 @@ function _updatePedido() {
                 }, _callee2, null, [[3, 8]]);
               }));
 
-              return function (_x17) {
+              return function (_x23) {
                 return _ref.apply(this, arguments);
               };
             }());
@@ -413,16 +417,14 @@ function _registrarPedido() {
   _registrarPedido = _asyncToGenerator(
   /*#__PURE__*/
   regeneratorRuntime.mark(function _callee8(req, res) {
-    var _req$body3, iduser, diri, dirf, lati, longi, latf, longf, items, pesoxkm, iddelivery, total, envio, estadopedido, idpedido, nuevoPedido, i, numItems, stringJson, idProducto, cantidad, productFound, nuevoitem, value, pedidoUpdate;
+    var _req$body2, iduser, diri, dirf, lati, longi, latf, longf, items, iddelivery, total, envio, estadopedido, idpedido, nuevoPedido, i, numItems, stringJson, idProducto, cantidad, productFound, nuevoitem, value, usr, peso_kms, param, nivel, cantEnvios, puntaje, kms, date, currenthour, currentnumberday, pedidoUpdate;
 
     return regeneratorRuntime.wrap(function _callee8$(_context8) {
       while (1) {
         switch (_context8.prev = _context8.next) {
           case 0:
-            _req$body3 = req.body, iduser = _req$body3.iduser, diri = _req$body3.diri, dirf = _req$body3.dirf, lati = _req$body3.lati, longi = _req$body3.longi, latf = _req$body3.latf, longf = _req$body3.longf, items = _req$body3.items;
-            console.log(items);
-            pesoxkm = 1;
-            _context8.prev = 3;
+            _req$body2 = req.body, iduser = _req$body2.iduser, diri = _req$body2.diri, dirf = _req$body2.dirf, lati = _req$body2.lati, longi = _req$body2.longi, latf = _req$body2.latf, longf = _req$body2.longf, items = _req$body2.items;
+            _context8.prev = 1;
             iddelivery = 0;
             total = 0;
             envio = 0; //estadopedido=1 pendiente       
@@ -430,7 +432,7 @@ function _registrarPedido() {
             estadopedido = 1; //creo el pedido con total=0
 
             idpedido = 0;
-            _context8.next = 11;
+            _context8.next = 9;
             return _Pedido["default"].create({
               ped_userid: iduser,
               ped_deliveryid: iddelivery,
@@ -447,11 +449,11 @@ function _registrarPedido() {
               fields: ['ped_userid', 'ped_deliveryid', 'ped_total', 'ped_envio', 'ped_direccioninicio', 'ped_direcciondestino', 'ped_latitudinicio', 'ped_longitudinicio', 'ped_latituddestino', 'ped_longituddestino', 'ped_longituddestino', 'ped_estado']
             });
 
-          case 11:
+          case 9:
             nuevoPedido = _context8.sent;
 
             if (!nuevoPedido) {
-              _context8.next = 36;
+              _context8.next = 54;
               break;
             }
 
@@ -460,24 +462,19 @@ function _registrarPedido() {
             i = 0;
             numItems = items.length; //saco todos los items
 
-          case 16:
+          case 14:
             if (!(i < numItems)) {
-              _context8.next = 31;
+              _context8.next = 29;
               break;
             }
 
             //saco el string del json
-            stringJson = items[i]; //var stringJson = JSON.parse(items[i]);
-            //console.log("Items"+stringJson)
-            //valores id y cantidad
+            stringJson = items[i]; //valores id y cantidad
 
             idProducto = stringJson.id;
-            cantidad = stringJson.cantidad;
-            /*console.log("idproducto: "+idProducto)
-            console.log("cantidad :"+cantidad)*/
-            //busco los datos del producto
+            cantidad = stringJson.cantidad; //busco los datos del producto
 
-            _context8.next = 22;
+            _context8.next = 20;
             return _Producto["default"].findOne({
               where: {
                 prod_id: idProducto
@@ -485,15 +482,15 @@ function _registrarPedido() {
               attributes: ['prod_value']
             });
 
-          case 22:
+          case 20:
             productFound = _context8.sent;
 
             if (!productFound) {
-              _context8.next = 28;
+              _context8.next = 26;
               break;
             }
 
-            _context8.next = 26;
+            _context8.next = 24;
             return _Item["default"].create({
               item_pedidoid: idpedido,
               item_productoid: idProducto,
@@ -502,7 +499,7 @@ function _registrarPedido() {
               fields: ['item_pedidoid', 'item_productoid', 'item_cantidad']
             });
 
-          case 26:
+          case 24:
             nuevoitem = _context8.sent;
 
             if (nuevoitem) {
@@ -510,16 +507,57 @@ function _registrarPedido() {
               total += value * cantidad;
             }
 
-          case 28:
+          case 26:
             //incremento 
             i = i + 1;
-            _context8.next = 16;
+            _context8.next = 14;
             break;
 
-          case 31:
-            envio = pesoxkm * parseInt((0, _Service.getKilometros)(latf, longf, lati, longi)); //hago el update del total del pedido  
+          case 29:
+            envio = 0;
+            _context8.next = 32;
+            return _User["default"].findOne({
+              where: {
+                id: iduser
+              },
+              attributes: ['id', 'nombre', 'pass', 'mail', 'rol', 'puntaje', 'nivel', 'foto', 'cantEnvios', 'redsocial', 'uidfirebase']
+            });
 
-            _context8.next = 34;
+          case 32:
+            usr = _context8.sent;
+
+            if (!usr) {
+              _context8.next = 48;
+              break;
+            }
+
+            peso_kms = 5;
+            _context8.next = 37;
+            return _parametro["default"].findOne({
+              where: {
+                par_nombre: 'pesos_km'
+              },
+              attributes: ['par_id', 'par_nombre', 'par_value']
+            });
+
+          case 37:
+            param = _context8.sent;
+            if (param) peso_kms = param.par_value;
+            nivel = usr.nivel;
+            cantEnvios = usr.cantEnvios;
+            puntaje = usr.points;
+            kms = (0, _service.getKilometros)(latf, longf, lati, longi);
+            date = new Date();
+            currenthour = date.getHours();
+            currentnumberday = date.getDay();
+            kms = (0, _service.getKilometros)(latf, longf, lati, longi);
+            envio = (0, _service.getPrecioEnvioPorReglas)(currentnumberday, currenthour, kms * peso_kms, kms, cantEnvios, nivel, puntaje);
+
+          case 48:
+            total = parseInt(total);
+            envio = parseInt(envio); //hago el update del total del pedido  
+
+            _context8.next = 52;
             return _Pedido["default"].update({
               ped_total: total,
               ped_envio: envio
@@ -529,25 +567,16 @@ function _registrarPedido() {
               }
             });
 
-          case 34:
+          case 52:
             pedidoUpdate = _context8.sent;
 
             if (pedidoUpdate) {
-              //devuelvo el id pedido y el total
-              console.log("Pedido registrado");
-              /*res.json(
-               {
-                message:'Pedido Registrado Correctamente Estado Pendiente',
-               idpedido,total,envio
-               })*/
-
               res.json({
                 message: 'Pedido Registrado Correctamente Estado Pendiente',
                 data: pedidoUpdate
               });
             } else {
-              console.log("Pedido NO registrado"); //devuelvo el id pedido y el total
-
+              //devuelvo el id pedido y el total
               res.status(500).json({
                 message: 'no se pudo hacer el update',
                 data: {
@@ -556,24 +585,24 @@ function _registrarPedido() {
               });
             }
 
-          case 36:
-            _context8.next = 41;
+          case 54:
+            _context8.next = 59;
             break;
 
-          case 38:
-            _context8.prev = 38;
-            _context8.t0 = _context8["catch"](3);
+          case 56:
+            _context8.prev = 56;
+            _context8.t0 = _context8["catch"](1);
             res.status(500).json({
               message: 'no se pudo registrar el pedido',
               data: _context8.t0
             });
 
-          case 41:
+          case 59:
           case "end":
             return _context8.stop();
         }
       }
-    }, _callee8, null, [[3, 38]]);
+    }, _callee8, null, [[1, 56]]);
   }));
   return _registrarPedido.apply(this, arguments);
 }
@@ -587,17 +616,16 @@ function _getPedidosPendientesParaDelivery() {
   _getPedidosPendientesParaDelivery = _asyncToGenerator(
   /*#__PURE__*/
   regeneratorRuntime.mark(function _callee9(req, res) {
-    var _req$body4, lati, longi, estadopedido, maxkms, pedidos, pedidoscercanos;
+    var _req$params, lati, longi, estadopedido, pedidos, maxkms, param, pedidoscercanos;
 
     return regeneratorRuntime.wrap(function _callee9$(_context9) {
       while (1) {
         switch (_context9.prev = _context9.next) {
           case 0:
-            _req$body4 = req.body, lati = _req$body4.lati, longi = _req$body4.longi;
+            _req$params = req.params, lati = _req$params.lati, longi = _req$params.longi;
             estadopedido = 1;
-            maxkms = 20000000;
-            _context9.prev = 3;
-            _context9.next = 6;
+            _context9.prev = 2;
+            _context9.next = 5;
             return _Pedido["default"].findAll({
               where: {
                 ped_estado: estadopedido
@@ -605,36 +633,60 @@ function _getPedidosPendientesParaDelivery() {
               attributes: ['ped_id', 'ped_userid', 'ped_deliveryid', 'ped_total', 'ped_envio', 'ped_direccioninicio', 'ped_direcciondestino', 'ped_latitudinicio', 'ped_longitudinicio', 'ped_latituddestino', 'ped_longituddestino', 'ped_longituddestino', 'ped_estado']
             });
 
-          case 6:
+          case 5:
             pedidos = _context9.sent;
 
-            if (pedidos) {
-              //filtro los cercanos 
-              pedidoscercanos = [];
-              pedidos.forEach(function (ped) {
-                var lat = ped.ped_latitudinicio;
-                var _long = ped.ped_longitudinicio;
-
-                if (parseInt((0, _Service.getKilometros)(lat, _long, lati, longi)) <= maxkms) {
-                  pedidoscercanos.push(ped);
-                }
-              });
-              res.json({
-                message: 'pedidos pendientes son:',
-                pedidos: pedidos
-              });
-            } else {
-              res.status(500).json({
-                message: 'No se encontro registros de pedidos.'
-              });
+            if (!pedidos) {
+              _context9.next = 17;
+              break;
             }
 
-            _context9.next = 13;
-            break;
+            maxkms = 20;
+            _context9.next = 10;
+            return _parametro["default"].findOne({
+              where: {
+                par_nombre: 'maxkms'
+              },
+              attributes: ['par_id', 'par_nombre', 'par_value']
+            });
 
           case 10:
-            _context9.prev = 10;
-            _context9.t0 = _context9["catch"](3);
+            param = _context9.sent;
+
+            if (param) {
+              maxkms = param.par_value;
+            } //filtro los cercanos 
+
+
+            pedidoscercanos = [];
+            pedidos.forEach(function (ped) {
+              var lat = parseFloat(ped.ped_latitudinicio);
+
+              var _long = parseFloat(ped.ped_longitudinicio);
+
+              if (parseFloat((0, _service.getKilometros)(lat, _long, lati, longi)) <= maxkms) {
+                pedidoscercanos.push(ped);
+              }
+            });
+            res.json({
+              message: 'pedidos pendientes son:',
+              pedidoscercanos: pedidoscercanos
+            });
+            _context9.next = 18;
+            break;
+
+          case 17:
+            res.status(500).json({
+              message: 'No se encontro registros de pedidos.'
+            });
+
+          case 18:
+            _context9.next = 23;
+            break;
+
+          case 20:
+            _context9.prev = 20;
+            _context9.t0 = _context9["catch"](2);
             res.status(500).json({
               message: 'algo no funciono',
               data: {
@@ -642,12 +694,12 @@ function _getPedidosPendientesParaDelivery() {
               }
             });
 
-          case 13:
+          case 23:
           case "end":
             return _context9.stop();
         }
       }
-    }, _callee9, null, [[3, 10]]);
+    }, _callee9, null, [[2, 20]]);
   }));
   return _getPedidosPendientesParaDelivery.apply(this, arguments);
 }
@@ -655,26 +707,24 @@ function _getPedidosPendientesParaDelivery() {
 function asignarPedidoADelivery(_x15, _x16) {
   return _asignarPedidoADelivery.apply(this, arguments);
 }
-/* obtengo el precio del envio antes de dar el ok o no al registro 
-pedido*/
+/*obtengo el precio del envio con las reglas*/
 
 
 function _asignarPedidoADelivery() {
   _asignarPedidoADelivery = _asyncToGenerator(
   /*#__PURE__*/
   regeneratorRuntime.mark(function _callee10(req, res) {
-    var _req$body5, idpedido, iddelivery, estadoPendiente, estadoAsignado, pedidosSinAsignar, pedidoUpdate;
+    var _req$body3, idpedido, iddelivery, estadoPendiente, estadoAsignado, pedidosSinAsignar, pedidoUpdate;
 
     return regeneratorRuntime.wrap(function _callee10$(_context10) {
       while (1) {
         switch (_context10.prev = _context10.next) {
           case 0:
-            _req$body5 = req.body, idpedido = _req$body5.idpedido, iddelivery = _req$body5.iddelivery;
-            console.log("id del delivery :" + iddelivery);
+            _req$body3 = req.body, idpedido = _req$body3.idpedido, iddelivery = _req$body3.iddelivery;
             estadoPendiente = 1;
             estadoAsignado = 2;
-            _context10.prev = 4;
-            _context10.next = 7;
+            _context10.prev = 3;
+            _context10.next = 6;
             return _Pedido["default"].count({
               where: {
                 ped_id: idpedido,
@@ -682,15 +732,15 @@ function _asignarPedidoADelivery() {
               }
             });
 
-          case 7:
+          case 6:
             pedidosSinAsignar = _context10.sent;
 
             if (!(pedidosSinAsignar > 0)) {
-              _context10.next = 15;
+              _context10.next = 14;
               break;
             }
 
-            _context10.next = 11;
+            _context10.next = 10;
             return _Pedido["default"].update({
               ped_deliveryid: iddelivery,
               ped_estado: estadoAsignado
@@ -700,7 +750,7 @@ function _asignarPedidoADelivery() {
               }
             });
 
-          case 11:
+          case 10:
             pedidoUpdate = _context10.sent;
 
             if (pedidoUpdate) {
@@ -716,21 +766,21 @@ function _asignarPedidoADelivery() {
               });
             }
 
-            _context10.next = 16;
+            _context10.next = 15;
             break;
 
-          case 15:
+          case 14:
             res.status(500).json({
               message: 'El pedido ya fue asignado.'
             });
 
-          case 16:
-            _context10.next = 21;
+          case 15:
+            _context10.next = 20;
             break;
 
-          case 18:
-            _context10.prev = 18;
-            _context10.t0 = _context10["catch"](4);
+          case 17:
+            _context10.prev = 17;
+            _context10.t0 = _context10["catch"](3);
             res.status(500).json({
               message: 'algo no funciono',
               data: {
@@ -738,29 +788,281 @@ function _asignarPedidoADelivery() {
               }
             });
 
-          case 21:
+          case 20:
           case "end":
             return _context10.stop();
         }
       }
-    }, _callee10, null, [[4, 18]]);
+    }, _callee10, null, [[3, 17]]);
   }));
   return _asignarPedidoADelivery.apply(this, arguments);
 }
 
-function getPrecioEnvio(req, res) {
-  var _req$body = req.body,
-      lati = _req$body.lati,
-      longi = _req$body.longi,
-      latf = _req$body.latf,
-      longf = _req$body.longf;
-  var pesoxkm = 10;
-  var kms = (0, _Service.getKilometros)(latf, longf, lati, longi);
-  var envio = (0, _Service.getPrecioEnvioPorReglas)(1, 19, kms * pesoxkm, kms, 10, 1, 4343); //const re=  getPorcentajeEnvioPorReglas(0, 21, 500 ,11,1, 333);
-  //console.log(re);
+function getPrecioEnvio(_x17, _x18) {
+  return _getPrecioEnvio.apply(this, arguments);
+}
+/*obtengo el porcentaje del envio para el delivery 
+*/
 
-  res.json({
-    message: 'valor envio',
-    envio: envio
-  });
+
+function _getPrecioEnvio() {
+  _getPrecioEnvio = _asyncToGenerator(
+  /*#__PURE__*/
+  regeneratorRuntime.mark(function _callee11(req, res) {
+    var _req$body4, idusuario, lati, longi, latf, longf, usuario, peso_kms, param, nivel, cantEnvios, puntaje, kms, date, currenthour, currentnumberday, envio;
+
+    return regeneratorRuntime.wrap(function _callee11$(_context11) {
+      while (1) {
+        switch (_context11.prev = _context11.next) {
+          case 0:
+            _req$body4 = req.body, idusuario = _req$body4.idusuario, lati = _req$body4.lati, longi = _req$body4.longi, latf = _req$body4.latf, longf = _req$body4.longf;
+            _context11.prev = 1;
+            _context11.next = 4;
+            return Usuario.findOne({
+              where: {
+                id: idusuario
+              },
+              attributes: ['id', 'nombre', 'pass', 'mail', 'rol', 'puntaje', 'nivel', 'foto', 'cantEnvios', 'redsocial', 'uidfirebase']
+            });
+
+          case 4:
+            usuario = _context11.sent;
+
+            if (!usuario) {
+              _context11.next = 23;
+              break;
+            }
+
+            peso_kms = 5;
+            _context11.next = 9;
+            return _parametro["default"].findOne({
+              where: {
+                par_nombre: 'pesos_km'
+              },
+              attributes: ['par_id', 'par_nombre', 'par_value']
+            });
+
+          case 9:
+            param = _context11.sent;
+            if (param) peso_kms = param.par_value;
+            nivel = usuario.nivel;
+            cantEnvios = usuario.cantEnvios;
+            puntaje = usuario.points;
+            kms = (0, _service.getKilometros)(latf, longf, lati, longi);
+            date = new Date();
+            currenthour = date.getHours();
+            currentnumberday = date.getDay();
+            kms = (0, _service.getKilometros)(latf, longf, lati, longi);
+            envio = (0, _service.getPrecioEnvioPorReglas)(currentnumberday, currenthour, kms * peso_kms, kms, cantEnvios, nivel, puntaje);
+            res.json({
+              message: 'valor envio',
+              envio: envio
+            });
+            _context11.next = 24;
+            break;
+
+          case 23:
+            res.status(500).json({
+              message: 'No se encontro el usuario.'
+            });
+
+          case 24:
+            _context11.next = 29;
+            break;
+
+          case 26:
+            _context11.prev = 26;
+            _context11.t0 = _context11["catch"](1);
+            res.status(500).json({
+              message: '',
+              data: {
+                error: _context11.t0
+              }
+            });
+
+          case 29:
+          case "end":
+            return _context11.stop();
+        }
+      }
+    }, _callee11, null, [[1, 26]]);
+  }));
+  return _getPrecioEnvio.apply(this, arguments);
+}
+
+function getPorcentajeDelivery(_x19, _x20) {
+  return _getPorcentajeDelivery.apply(this, arguments);
+}
+
+function _getPorcentajeDelivery() {
+  _getPorcentajeDelivery = _asyncToGenerator(
+  /*#__PURE__*/
+  regeneratorRuntime.mark(function _callee12(req, res) {
+    var _req$body5, idusuario, iddelivery, lati, longi, latf, longf, usuarioCliente, usuarioDelivery, peso_kms, param, nivelCliente, cantEnviosCliente, puntajeCliente, nivelDelivery, cantEnviosDelivery, puntajeDelivery, kms, date, currenthour, currentnumberday, envio, porcentaje;
+
+    return regeneratorRuntime.wrap(function _callee12$(_context12) {
+      while (1) {
+        switch (_context12.prev = _context12.next) {
+          case 0:
+            _req$body5 = req.body, idusuario = _req$body5.idusuario, iddelivery = _req$body5.iddelivery, lati = _req$body5.lati, longi = _req$body5.longi, latf = _req$body5.latf, longf = _req$body5.longf;
+            _context12.prev = 1;
+            _context12.next = 4;
+            return Usuario.findOne({
+              where: {
+                id: idusuario
+              },
+              attributes: ['id', 'nombre', 'pass', 'mail', 'rol', 'puntaje', 'nivel', 'foto', 'cantEnvios', 'redsocial', 'uidfirebase']
+            });
+
+          case 4:
+            usuarioCliente = _context12.sent;
+            _context12.next = 7;
+            return Usuario.findOne({
+              where: {
+                id: iddelivery
+              },
+              attributes: ['id', 'nombre', 'pass', 'mail', 'rol', 'puntaje', 'nivel', 'foto', 'cantEnvios', 'redsocial', 'uidfirebase']
+            });
+
+          case 7:
+            usuarioDelivery = _context12.sent;
+
+            if (!(usuarioCliente && usuarioDelivery)) {
+              _context12.next = 29;
+              break;
+            }
+
+            peso_kms = 5;
+            _context12.next = 12;
+            return _parametro["default"].findOne({
+              where: {
+                par_nombre: 'pesos_km'
+              },
+              attributes: ['par_id', 'par_nombre', 'par_value']
+            });
+
+          case 12:
+            param = _context12.sent;
+            if (param) peso_kms = param.par_value;
+            nivelCliente = usuarioCliente.nivel;
+            cantEnviosCliente = usuarioCliente.cantEnvios;
+            puntajeCliente = usuarioCliente.points;
+            nivelDelivery = usuarioDelivery.nivel;
+            cantEnviosDelivery = usuarioDelivery.cantEnvios;
+            puntajeDelivery = usuarioDelivery.points;
+            kms = (0, _service.getKilometros)(latf, longf, lati, longi);
+            date = new Date();
+            currenthour = date.getHours();
+            currentnumberday = date.getDay();
+            envio = (0, _service.getPrecioEnvioPorReglas)(currentnumberday, currenthour, kms * peso_kms, kms, cantEnviosCliente, nivelCliente, puntajeCliente);
+            porcentaje = (0, _service.getPorcentajeEnvioPorReglas)(currentnumberday, currenthour, envio, cantEnviosDelivery, nivelDelivery, puntajeDelivery);
+            res.json({
+              message: 'valor porcentaje',
+              porcentaje: porcentaje,
+              envio: envio
+            });
+            _context12.next = 30;
+            break;
+
+          case 29:
+            if (!usuarioCliente && !usuarioDelivery) {
+              res.status(500).json({
+                message: 'No se encontro el usuario cliente y delivery.'
+              });
+            } else if (!usuarioCliente) {
+              res.status(500).json({
+                message: 'No se encontro el usuario cliente.'
+              });
+            } else {
+              res.status(500).json({
+                message: 'No se encontro el usuario delivery.'
+              });
+            }
+
+          case 30:
+            _context12.next = 35;
+            break;
+
+          case 32:
+            _context12.prev = 32;
+            _context12.t0 = _context12["catch"](1);
+            res.status(500).json({
+              message: 'algo no funciono',
+              data: {
+                error: _context12.t0
+              }
+            });
+
+          case 35:
+          case "end":
+            return _context12.stop();
+        }
+      }
+    }, _callee12, null, [[1, 32]]);
+  }));
+  return _getPorcentajeDelivery.apply(this, arguments);
+}
+
+function deletePedido(_x21, _x22) {
+  return _deletePedido.apply(this, arguments);
+}
+
+function _deletePedido() {
+  _deletePedido = _asyncToGenerator(
+  /*#__PURE__*/
+  regeneratorRuntime.mark(function _callee13(req, res) {
+    var id;
+    return regeneratorRuntime.wrap(function _callee13$(_context13) {
+      while (1) {
+        switch (_context13.prev = _context13.next) {
+          case 0:
+            id = req.paramsparams.id;
+            _context13.prev = 1;
+            _context13.next = 4;
+            return _Item["default"].destroy({
+              where: {
+                item_pedidoid: id
+              }
+            });
+
+          case 4:
+            _context13.next = 6;
+            return _Pedido["default"].destroy({
+              where: {
+                ped_id: id
+              }
+            }).then(function (deletedRecord) {
+              if (deletedRecord === 1) {
+                res.status(200).json({
+                  message: "Se borro correctamente"
+                });
+              } else {
+                res.status(404).json({
+                  message: "no existe registo"
+                });
+              }
+            });
+
+          case 6:
+            _context13.next = 11;
+            break;
+
+          case 8:
+            _context13.prev = 8;
+            _context13.t0 = _context13["catch"](1);
+            res.status(500).json({
+              message: 'Hubo un error',
+              data: {
+                error: _context13.t0
+              }
+            });
+
+          case 11:
+          case "end":
+            return _context13.stop();
+        }
+      }
+    }, _callee13, null, [[1, 8]]);
+  }));
+  return _deletePedido.apply(this, arguments);
 }

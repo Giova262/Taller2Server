@@ -383,8 +383,10 @@ export async function consultaPerfil(req,res){
 
 export async function chequeoToken(req,res,next){
 
-    jwt.verify(req.token, 'key' , (err,data)=>{
+    jwt.verify(req.headers['token'], 'key' , (err,data)=>{
         if(err){
+            console.log(req.headers['token'])
+            console.log("Error en chequeo token")
             res.json({
                 message:'Acceso Denegado.'
             });
@@ -408,6 +410,8 @@ export async function ensureToken(req,res,next){
         next();
 
     }else {
+
+        console.log("Error en ensureToken")
 
         res.json({
             message:'Token null error'

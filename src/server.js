@@ -15,7 +15,7 @@ const app = express()
 
 
 /** Middlewares */
-//app.use(bodyParser)
+//app.use(express.json())
 
 /*app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "YOUR-DOMAIN.TLD"); // update to match the domain you will make the request from
@@ -23,6 +23,7 @@ const app = express()
     next();
   });
 */
+//app.use(require('connect').bodyParser());
 
 app.use( json() )
 app.set( 'port' , process.env.PORT || 5000 ) 

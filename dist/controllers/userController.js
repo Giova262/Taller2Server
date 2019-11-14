@@ -13,6 +13,7 @@ exports.ensureToken = ensureToken;
 exports.getOne = getOne;
 exports.getDeliverysPorUsuario = getDeliverysPorUsuario;
 exports.getUsuariosPorDelivery = getUsuariosPorDelivery;
+exports.deleteUser = deleteUser;
 
 var _User = _interopRequireDefault(require("../models/User"));
 
@@ -100,7 +101,7 @@ function _updateUser() {
                 }, _callee);
               }));
 
-              return function (_x24) {
+              return function (_x26) {
                 return _ref.apply(this, arguments);
               };
             }());
@@ -402,7 +403,7 @@ function _login() {
                               }, _callee5, null, [[10, 17]]);
                             }));
 
-                            return function (_x26) {
+                            return function (_x28) {
                               return _ref3.apply(this, arguments);
                             };
                           }())["catch"](function (error) {
@@ -430,7 +431,7 @@ function _login() {
                 }, _callee6, null, [[1, 8]]);
               }));
 
-              return function (_x25) {
+              return function (_x27) {
                 return _ref2.apply(this, arguments);
               };
             }())["catch"](function (error) {
@@ -543,8 +544,10 @@ function _chequeoToken() {
       while (1) {
         switch (_context9.prev = _context9.next) {
           case 0:
-            _jsonwebtoken["default"].verify(req.token, 'key', function (err, data) {
+            _jsonwebtoken["default"].verify(req.headers['token'], 'key', function (err, data) {
               if (err) {
+                console.log(req.headers['token']);
+                console.log("Error en chequeo token");
                 res.json({
                   message: 'Acceso Denegado.'
                 });
@@ -586,6 +589,7 @@ function _ensureToken() {
               req.token = bearerToken;
               next();
             } else {
+              console.log("Error en ensureToken");
               res.json({
                 message: 'Token null error'
               });
@@ -777,4 +781,60 @@ function _getUsuariosPorDelivery() {
     }, _callee13, null, [[1, 9]]);
   }));
   return _getUsuariosPorDelivery.apply(this, arguments);
+}
+
+function deleteUser(_x24, _x25) {
+  return _deleteUser.apply(this, arguments);
+}
+
+function _deleteUser() {
+  _deleteUser = _asyncToGenerator(
+  /*#__PURE__*/
+  regeneratorRuntime.mark(function _callee14(req, res) {
+    var id;
+    return regeneratorRuntime.wrap(function _callee14$(_context14) {
+      while (1) {
+        switch (_context14.prev = _context14.next) {
+          case 0:
+            id = req.body.id;
+            _context14.prev = 1;
+            _context14.next = 4;
+            return _User["default"].destroy({
+              where: {
+                id: id
+              }
+            }).then(function (deletedRecord) {
+              if (deletedRecord === 1) {
+                res.status(200).json({
+                  message: "Se borro correctamente"
+                });
+              } else {
+                res.status(404).json({
+                  message: "no existe registo"
+                });
+              }
+            });
+
+          case 4:
+            _context14.next = 9;
+            break;
+
+          case 6:
+            _context14.prev = 6;
+            _context14.t0 = _context14["catch"](1);
+            res.status(500).json({
+              message: 'Hubo un error',
+              data: {
+                error: _context14.t0
+              }
+            });
+
+          case 9:
+          case "end":
+            return _context14.stop();
+        }
+      }
+    }, _callee14, null, [[1, 6]]);
+  }));
+  return _deleteUser.apply(this, arguments);
 }

@@ -28,16 +28,19 @@ router.post('/register', _userController.register);
 router.post('/login', _userController.login);
 /** consultar perfil */
 
-router.get('/consulta', _userController.ensureToken, _userController.consultaPerfil);
+router.get('/consulta', _userController.ensureToken, _userController.chequeoToken, _userController.consultaPerfil);
 /** consultar usuarios deliverys de pedidos por userid */
 
-router.get('/getDeliverysPorUsuario/:iduser', _userController.ensureToken, _userController.getDeliverysPorUsuario);
+router.get('/getDeliverysPorUsuario/:iduser', _userController.ensureToken, _userController.chequeoToken, _userController.getDeliverysPorUsuario);
 /** consultar usuarios deliverys de pedidos por deliveryid */
 
-router.get('/getUsuariosPorDelivery/:iddelivery', _userController.ensureToken, _userController.getUsuariosPorDelivery);
+router.get('/getUsuariosPorDelivery/:iddelivery', _userController.ensureToken, _userController.chequeoToken, _userController.getUsuariosPorDelivery);
 /** Actualizar usuario*/
 
-router.put('/:id', _userController.ensureToken, _userController.updateUser);
+router.put('/:id', _userController.ensureToken, _userController.chequeoToken, _userController.updateUser);
+/** Actualizar usuario*/
+
+router["delete"]('/:id', _userController.ensureToken, _userController.chequeoToken, _userController.deleteUser);
 /** Exporto */
 
 var _default = router;

@@ -250,7 +250,7 @@ export async function getPedidosHistorialDelivery(req, res)
 {
     
     const {idDelivery} = req.params;
-   
+ 
     try {
 
         let pedidos = await Pedido.findAll({
@@ -303,7 +303,7 @@ export async function getPedidosHistorialDelivery(req, res)
 export async function registrarPedido(req, res)
 {  
 var {iduser,diri,dirf,lati,longi,latf,longf,items} = req.body;
-console.log(items)
+
 
   try{
 
@@ -398,7 +398,7 @@ console.log(items)
  
 var envio=0;
 
-let usr = await Usuario.findOne({
+let usr = await User.findOne({
   where: {
     id:iduser
   },
@@ -454,7 +454,7 @@ if (usr)
 
   if(pedidoUpdate)
      {      
-     console.log("Pedido registrado")
+     
      res.json(
     {
       message:'Pedido Registrado Correctamente Estado Pendiente',
@@ -464,7 +464,7 @@ if (usr)
     }
     else
     {
-      console.log("Pedido NO registrado")
+  
        //devuelvo el id pedido y el total
        res.status(500).json({
         message:'no se pudo hacer el update',
@@ -478,6 +478,8 @@ if (usr)
 
 
 } catch (error) {
+
+
   res.status(500).json({
       message:'no se pudo registrar el pedido',
       data:error
@@ -487,18 +489,17 @@ if (usr)
 }
 
 
-
-
-
 //obtengo los pedidos pendientes cercanos.
 export async function getPedidosPendientesParaDelivery(req, res)
 {
-  var {lati,longi} = req.body;
+
+  const {lati,longi} = req.params;
+
   var estadopedido=1
   
   
   try {
-   /*hay que usar lati y longi para buscar los pedidos cercanos */
+   //hay que usar lati y longi para buscar los pedidos cercanos 
     let pedidos = await Pedido.findAll({
         where: {
           ped_estado: estadopedido
@@ -521,31 +522,36 @@ export async function getPedidosPendientesParaDelivery(req, res)
     });
 
     if(pedidos){
-                 var maxkms=40; 
+                 var maxkms=20; 
                  const param = await Parametro.findOne({
                  where: {
-                 par_nombre:'max_kms'
+                 par_nombre:'maxkms'
                          },
                  attributes: ['par_id','par_nombre','par_value']
                       });
     
-                  if(param) maxkms=param.par_value;
+                  if(param){
+                    maxkms=param.par_value;
+                
+                  } 
 
        //filtro los cercanos 
       var pedidoscercanos=[] ;
       pedidos.forEach( 
         (ped) => { 
-         var lat =ped.ped_latitudinicio;
-         var long=ped.ped_longitudinicio;
+         var lat =parseFloat(ped.ped_latitudinicio);
+         var long=parseFloat(ped.ped_longitudinicio);
+
         if(parseFloat(getKilometros(lat,long,lati,longi))<=maxkms)
          {
+
+         
           pedidoscercanos.push(ped);
          }
 
           }
           );
       
-
           res.json(
           {
             message:'pedidos pendientes son:',
@@ -566,6 +572,8 @@ export async function getPedidosPendientesParaDelivery(req, res)
         data:{error}
     });
 }
+
+
 }
 
 //asignacion de pedido a delivery
@@ -575,7 +583,7 @@ export async function asignarPedidoADelivery(req, res)
 
 var {idpedido,iddelivery} = req.body;  
 
-console.log("id del delivery :"+iddelivery)
+
 var estadoPendiente=1;  
 var estadoAsignado=2;
 try

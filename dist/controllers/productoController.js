@@ -6,6 +6,9 @@ Object.defineProperty(exports, "__esModule", {
 exports.getProductosPorComercio = getProductosPorComercio;
 exports.getAll = getAll;
 exports.getProductosPorPedido = getProductosPorPedido;
+exports.deleteProducto = deleteProducto;
+exports.updateProducto = updateProducto;
+exports.registrarProducto = registrarProducto;
 
 var _Producto = _interopRequireDefault(require("../models/Producto"));
 
@@ -192,4 +195,187 @@ function _getProductosPorPedido() {
     }, _callee3, null, [[1, 9]]);
   }));
   return _getProductosPorPedido.apply(this, arguments);
+}
+
+function deleteProducto(_x7, _x8) {
+  return _deleteProducto.apply(this, arguments);
+}
+
+function _deleteProducto() {
+  _deleteProducto = _asyncToGenerator(
+  /*#__PURE__*/
+  regeneratorRuntime.mark(function _callee4(req, res) {
+    var id;
+    return regeneratorRuntime.wrap(function _callee4$(_context4) {
+      while (1) {
+        switch (_context4.prev = _context4.next) {
+          case 0:
+            id = req.params.id;
+            _context4.prev = 1;
+            _context4.next = 4;
+            return _Producto["default"].destroy({
+              where: {
+                prod_id: id
+              }
+            }).then(function (deletedRecord) {
+              if (deletedRecord === 1) {
+                res.status(200).json({
+                  message: "Se borro correctamente"
+                });
+              } else {
+                res.status(404).json({
+                  message: "no existe registo"
+                });
+              }
+            });
+
+          case 4:
+            _context4.next = 9;
+            break;
+
+          case 6:
+            _context4.prev = 6;
+            _context4.t0 = _context4["catch"](1);
+            res.status(500).json({
+              message: 'Hubo un error',
+              data: {
+                error: _context4.t0
+              }
+            });
+
+          case 9:
+          case "end":
+            return _context4.stop();
+        }
+      }
+    }, _callee4, null, [[1, 6]]);
+  }));
+  return _deleteProducto.apply(this, arguments);
+}
+
+function updateProducto(_x9, _x10) {
+  return _updateProducto.apply(this, arguments);
+}
+
+function _updateProducto() {
+  _updateProducto = _asyncToGenerator(
+  /*#__PURE__*/
+  regeneratorRuntime.mark(function _callee5(req, res) {
+    var _req$body, idproducto, valor, nombre, idcomercio, descrip;
+
+    return regeneratorRuntime.wrap(function _callee5$(_context5) {
+      while (1) {
+        switch (_context5.prev = _context5.next) {
+          case 0:
+            _req$body = req.body, idproducto = _req$body.idproducto, valor = _req$body.valor, nombre = _req$body.nombre, idcomercio = _req$body.idcomercio, descrip = _req$body.descrip;
+            _context5.prev = 1;
+            _context5.next = 4;
+            return _Producto["default"].find({
+              where: {
+                prod_id: idproducto
+              }
+            }).on('success', function (Producto) {
+              // si el registro exite
+              if (Producto) {
+                Producto.update({
+                  prod_value: valor,
+                  prod_nombre: nombre,
+                  prod_idcomercio: idcomercio,
+                  prod_descripcion: descrip
+                }).success(res.status(200).json({
+                  message: "Se actualizo correctamente"
+                })).error(function (err) {
+                  return res.status(404).json({
+                    message: 'Hubo un error al actualizar',
+                    data: {
+                      err: err
+                    }
+                  });
+                });
+              }
+            });
+
+          case 4:
+            _context5.next = 9;
+            break;
+
+          case 6:
+            _context5.prev = 6;
+            _context5.t0 = _context5["catch"](1);
+            res.status(500).json({
+              message: 'Hubo un error',
+              data: {
+                error: _context5.t0
+              }
+            });
+
+          case 9:
+          case "end":
+            return _context5.stop();
+        }
+      }
+    }, _callee5, null, [[1, 6]]);
+  }));
+  return _updateProducto.apply(this, arguments);
+}
+
+function registrarProducto(_x11, _x12) {
+  return _registrarProducto.apply(this, arguments);
+}
+
+function _registrarProducto() {
+  _registrarProducto = _asyncToGenerator(
+  /*#__PURE__*/
+  regeneratorRuntime.mark(function _callee6(req, res) {
+    var _req$body2, valor, nombre, idcomercio, descrip, nuevoProducto;
+
+    return regeneratorRuntime.wrap(function _callee6$(_context6) {
+      while (1) {
+        switch (_context6.prev = _context6.next) {
+          case 0:
+            _req$body2 = req.body, valor = _req$body2.valor, nombre = _req$body2.nombre, idcomercio = _req$body2.idcomercio, descrip = _req$body2.descrip;
+            _context6.prev = 1;
+            _context6.next = 4;
+            return _Producto["default"].create({
+              prod_value: valor,
+              prod_nombre: nombre,
+              prod_idcomercio: idcomercio,
+              prod_descripcion: descrip
+            }, {
+              fields: ['prod_value', 'prod_nombre', 'prod_idcomercio', 'prod_descripcion']
+            });
+
+          case 4:
+            nuevoProducto = _context6.sent;
+
+            if (!nuevoProducto) {
+              _context6.next = 7;
+              break;
+            }
+
+            return _context6.abrupt("return", res.json({
+              message: 'Producto creado.',
+              data: nuevoProducto
+            }));
+
+          case 7:
+            _context6.next = 12;
+            break;
+
+          case 9:
+            _context6.prev = 9;
+            _context6.t0 = _context6["catch"](1);
+            res.status(500).json({
+              message: 'Ocurrio un Error al crear producto',
+              error: _context6.t0
+            });
+
+          case 12:
+          case "end":
+            return _context6.stop();
+        }
+      }
+    }, _callee6, null, [[1, 9]]);
+  }));
+  return _registrarProducto.apply(this, arguments);
 }

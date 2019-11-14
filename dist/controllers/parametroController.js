@@ -4,11 +4,11 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.getAll = getAll;
-exports.deleteComercio = deleteComercio;
-exports.updateComercio = updateComercio;
-exports.registrarComercio = registrarComercio;
+exports.deleteParametro = deleteParametro;
+exports.updateParametro = updateParametro;
+exports.registrarParametro = registrarParametro;
 
-var _Comercio = _interopRequireDefault(require("../models/Comercio"));
+var _parametro = _interopRequireDefault(require("../models/parametro"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
@@ -25,27 +25,26 @@ function _getAll() {
   _getAll = _asyncToGenerator(
   /*#__PURE__*/
   regeneratorRuntime.mark(function _callee(req, res) {
-    var comercios;
+    var parametros;
     return regeneratorRuntime.wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
             _context.prev = 0;
             _context.next = 3;
-            return _Comercio["default"].findAll();
+            return _parametro["default"].findAll();
 
           case 3:
-            comercios = _context.sent;
+            parametros = _context.sent;
 
-            if (comercios) {
+            if (parametros) {
               res.json({
-                message: 'todos los comercios registrados',
-                data: comercios
-              });
+                message: 'todos los parametros registrados',
+                parametros: parametros
+              }); //res.json(['John', 'Betty', 'Hal']);
             } else {
               res.status(500).json({
-                message: 'No se encontro registros de comercios.',
-                data: {}
+                message: 'No se encontro registros de parametros.'
               });
             }
 
@@ -56,7 +55,7 @@ function _getAll() {
             _context.prev = 7;
             _context.t0 = _context["catch"](0);
             res.status(500).json({
-              message: 'algo salio mal obteniendo los comercios',
+              message: 'algo salio mal obteniendo los parametros',
               data: {
                 error: _context.t0
               }
@@ -72,25 +71,25 @@ function _getAll() {
   return _getAll.apply(this, arguments);
 }
 
-function deleteComercio(_x3, _x4) {
-  return _deleteComercio.apply(this, arguments);
+function deleteParametro(_x3, _x4) {
+  return _deleteParametro.apply(this, arguments);
 }
 
-function _deleteComercio() {
-  _deleteComercio = _asyncToGenerator(
+function _deleteParametro() {
+  _deleteParametro = _asyncToGenerator(
   /*#__PURE__*/
   regeneratorRuntime.mark(function _callee2(req, res) {
-    var id;
+    var nombre;
     return regeneratorRuntime.wrap(function _callee2$(_context2) {
       while (1) {
         switch (_context2.prev = _context2.next) {
           case 0:
-            id = req.params.id;
+            nombre = req.params.nombre;
             _context2.prev = 1;
             _context2.next = 4;
-            return _Comercio["default"].destroy({
+            return _parametro["default"].destroy({
               where: {
-                com_id: id
+                par_nombre: nombre
               }
             }).then(function (deletedRecord) {
               if (deletedRecord === 1) {
@@ -125,40 +124,35 @@ function _deleteComercio() {
       }
     }, _callee2, null, [[1, 6]]);
   }));
-  return _deleteComercio.apply(this, arguments);
+  return _deleteParametro.apply(this, arguments);
 }
 
-function updateComercio(_x5, _x6) {
-  return _updateComercio.apply(this, arguments);
+function updateParametro(_x5, _x6) {
+  return _updateParametro.apply(this, arguments);
 }
 
-function _updateComercio() {
-  _updateComercio = _asyncToGenerator(
+function _updateParametro() {
+  _updateParametro = _asyncToGenerator(
   /*#__PURE__*/
   regeneratorRuntime.mark(function _callee3(req, res) {
-    var _req$body, idcomercio, nombre, direccion, descrip, lat, _long, estado;
+    var _req$body, nombre, value;
 
     return regeneratorRuntime.wrap(function _callee3$(_context3) {
       while (1) {
         switch (_context3.prev = _context3.next) {
           case 0:
-            _req$body = req.body, idcomercio = _req$body.idcomercio, nombre = _req$body.nombre, direccion = _req$body.direccion, descrip = _req$body.descrip, lat = _req$body.lat, _long = _req$body["long"], estado = _req$body.estado;
+            _req$body = req.body, nombre = _req$body.nombre, value = _req$body.value;
             _context3.prev = 1;
             _context3.next = 4;
-            return _Comercio["default"].find({
+            return _parametro["default"].findOne({
               where: {
-                com_id: idcomercio
+                par_nombre: nombre
               }
-            }).on('success', function (Comercio) {
+            }).on('success', function (Parametro) {
               // si el registro exite
-              if (Comercio) {
-                Comercio.update({
-                  com_nombre: nombre,
-                  com_direccion: direccion,
-                  com_descripcion: descrip,
-                  com_latitud: lat,
-                  com_longitud: _long,
-                  com_estado: estado
+              if (Parametro) {
+                Parametro.update({
+                  par_value: value
                 }).success(res.status(200).json({
                   message: "Se actualizo correctamente"
                 })).error(function (err) {
@@ -193,48 +187,44 @@ function _updateComercio() {
       }
     }, _callee3, null, [[1, 6]]);
   }));
-  return _updateComercio.apply(this, arguments);
+  return _updateParametro.apply(this, arguments);
 }
 
-function registrarComercio(_x7, _x8) {
-  return _registrarComercio.apply(this, arguments);
+function registrarParametro(_x7, _x8) {
+  return _registrarParametro.apply(this, arguments);
 }
 
-function _registrarComercio() {
-  _registrarComercio = _asyncToGenerator(
+function _registrarParametro() {
+  _registrarParametro = _asyncToGenerator(
   /*#__PURE__*/
   regeneratorRuntime.mark(function _callee4(req, res) {
-    var _req$body2, nombre, direccion, descrip, lat, _long2, estado, nuevoComercio;
+    var _req$body2, nombre, value, nuevoParametro;
 
     return regeneratorRuntime.wrap(function _callee4$(_context4) {
       while (1) {
         switch (_context4.prev = _context4.next) {
           case 0:
-            _req$body2 = req.body, nombre = _req$body2.nombre, direccion = _req$body2.direccion, descrip = _req$body2.descrip, lat = _req$body2.lat, _long2 = _req$body2["long"], estado = _req$body2.estado;
+            _req$body2 = req.body, nombre = _req$body2.nombre, value = _req$body2.value;
             _context4.prev = 1;
             _context4.next = 4;
-            return _Comercio["default"].create({
-              com_nombre: nombre,
-              com_direccion: direccion,
-              com_descripcion: descrip,
-              com_latitud: lat,
-              com_longitud: _long2,
-              com_estado: estado
+            return _parametro["default"].create({
+              par_nombre: nombre,
+              par_value: value
             }, {
-              fields: ['com_nombre', 'com_direccion', 'com_descripcion', 'com_latitud', 'com_longitud', 'com_estado']
+              fields: ['par_nombre', 'par_value']
             });
 
           case 4:
-            nuevoComercio = _context4.sent;
+            nuevoParametro = _context4.sent;
 
-            if (!nuevoComercio) {
+            if (!nuevoParametro) {
               _context4.next = 7;
               break;
             }
 
             return _context4.abrupt("return", res.json({
-              message: 'Producto creado.',
-              data: nuevoComercio
+              message: 'Parametro creado.',
+              data: nuevoParametro
             }));
 
           case 7:
@@ -245,7 +235,7 @@ function _registrarComercio() {
             _context4.prev = 9;
             _context4.t0 = _context4["catch"](1);
             res.status(500).json({
-              message: 'Ocurrio un Error al crear comercio',
+              message: 'Ocurrio un Error al crear parametro',
               error: _context4.t0
             });
 
@@ -256,5 +246,5 @@ function _registrarComercio() {
       }
     }, _callee4, null, [[1, 9]]);
   }));
-  return _registrarComercio.apply(this, arguments);
+  return _registrarParametro.apply(this, arguments);
 }

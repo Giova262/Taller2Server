@@ -44,7 +44,7 @@ router.get('/getPedidosUsuario/:idUsuario',ensureToken,chequeoToken, getPedidosU
 router.get('/getPedidosDelivery/:idDelivery',ensureToken,chequeoToken, getPedidosDelivery);
 
 /* Obtener pedidos cercanos al Delivery */
-router.get('/getPedidosPendientesParaDelivery/',ensureToken,chequeoToken, getPedidosPendientesParaDelivery);
+router.get('/getPedidosPendientesParaDelivery/:lati&:longi',ensureToken,chequeoToken, getPedidosPendientesParaDelivery);
 
 /* setear pedido tomad por idDelivery */
 router.post('/asignarPedidoADelivery/',ensureToken,chequeoToken, asignarPedidoADelivery);
