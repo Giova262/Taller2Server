@@ -5,17 +5,30 @@ const router = Router()
     /** Controladores */
 
 import {  
-    getAll } from '../controllers/comercioController';
+    getAll,
+    deleteComercio,
+    updateComercio,
+    registrarComercio,
+ } from '../controllers/comercioController';
 
 
 import { 
-     ensureToken
+     ensureToken,chequeoToken
     } from '../controllers/userController';
 
 
 /** Rutas */
-/** Obtener todos los productos */
-router.get('/all', ensureToken,getAll );
 
+/* Obtener todos los comercios */
+router.get('/all', ensureToken,chequeoToken,getAll );
+
+ /* delete comercio*/
+ router.delete('/:id',ensureToken,chequeoToken, deleteComercio);
+
+ /* update comercio*/
+ router.put('/',ensureToken,chequeoToken,updateComercio);
+
+ /* creo un comercio*/
+ router.post('/', ensureToken,chequeoToken,registrarComercio);
 
 export default router

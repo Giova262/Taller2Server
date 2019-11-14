@@ -17,7 +17,7 @@ admin.initializeApp({
 /** actualizar usuario */
 export async function updateUser(req,res){
    
-    const { id,nombre,mail,pass,rol,foto,redsocial } = req.body;
+    const {id,nombre,mail,pass,rol,foto,redsocial } = req.body;
 
     try {
 
@@ -527,3 +527,29 @@ if(usuarios){
       } 
  }
 
+ export async function deleteUser(req, res)
+ {
+ var {id} = req.body;
+  try {
+ 
+   await Test.destroy({
+         where: {
+            id:id
+         }})
+         .then(function (deletedRecord) {
+             if(deletedRecord === 1){
+                 res.status(200).json({message:"Se borro correctamente"});          
+             }
+             else
+             {
+                 res.status(404).json({message:"no existe registo"})
+             }
+         })
+ 
+ } catch (error) {
+     res.status(500).json({
+         message:'Hubo un error',
+         data:{error}
+     });
+ }
+ }

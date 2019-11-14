@@ -2,8 +2,9 @@ import Pedido from '../models/Pedido'
 import Producto from '../models/Producto'
 import User from '../models/User'
 import Item from '../models/Item'
-import {getKilometros, getPrecioEnvioPorReglas, getPorcentajeEnvioPorReglas}  from '../service/Service'
-//import jwt from 'jsonwebtoken'
+import Parametro from '../models/parametro'
+
+import {getKilometros, getPrecioEnvioPorReglas, getPorcentajeEnvioPorReglas}  from '../service/service'
 
 
 //Actualizar pedido
@@ -297,14 +298,13 @@ export async function getPedidosHistorialDelivery(req, res)
 }
 
 
+
 //registro el pedido pendiente
-export async function registrarPedido(req, res){  
-
+export async function registrarPedido(req, res)
+{  
 var {iduser,diri,dirf,lati,longi,latf,longf,items} = req.body;
-
 console.log(items)
 
-var pesoxkm=1
   try{
 
             var iddelivery=0;
@@ -359,14 +359,9 @@ var pesoxkm=1
             {
               //saco el string del json
               var stringJson=items[i];
-              //var stringJson = JSON.parse(items[i]);
-              //console.log("Items"+stringJson)
               //valores id y cantidad
               const idProducto= stringJson.id
               const cantidad  = stringJson.cantidad
-
-              /*console.log("idproducto: "+idProducto)
-              console.log("cantidad :"+cantidad)*/
               //busco los datos del producto
               const productFound = await Producto.findOne({
                     where: {
@@ -399,7 +394,56 @@ var pesoxkm=1
     i = i+1;
   }
 
-   envio=pesoxkm*parseInt(getKilometros(latf,longf,lati,longi))
+
+ 
+var envio=0;
+
+let usr = await Usuario.findOne({
+  where: {
+    id:iduser
+  },
+  attributes: [ 
+    'id',
+    'nombre',
+    'pass',
+    'mail',
+    'rol',
+    'puntaje',
+    'nivel',
+    'foto',
+    'cantEnvios',
+    'redsocial',
+    'uidfirebase']
+
+});
+
+if (usr) 
+{
+  var peso_kms=5 
+  
+  const param = await Parametro.findOne({
+    where: {
+    par_nombre:'pesos_km'
+            },
+    attributes: ['par_id','par_nombre','par_value']
+         });
+
+   if(param)  peso_kms=param.par_value;
+  
+  var nivel=usr.nivel;
+  var cantEnvios=usr.cantEnvios;
+  var puntaje= usr.points;
+  var kms  = getKilometros(latf,longf,lati,longi);
+
+  var date = new Date();
+  var currenthour = date.getHours();
+  var currentnumberday=date.getDay();
+  var kms=getKilometros(latf,longf,lati,longi);
+  envio= getPrecioEnvioPorReglas(currentnumberday,currenthour,kms*peso_kms,kms,cantEnvios,nivel,puntaje);
+  }
+  total =parseInt(total);
+  envio =parseInt(envio);
+
   //hago el update del total del pedido  
   let pedidoUpdate= await Pedido.update(
     { ped_total: total,
@@ -410,19 +454,12 @@ var pesoxkm=1
 
   if(pedidoUpdate)
      {      
-     //devuelvo el id pedido y el total
      console.log("Pedido registrado")
-
-    /*res.json(
-     {
-      message:'Pedido Registrado Correctamente Estado Pendiente',
-     idpedido,total,envio
-     })*/
-
-     res.json({
+     res.json(
+    {
       message:'Pedido Registrado Correctamente Estado Pendiente',
       data:pedidoUpdate  
-    })
+     })
     
     }
     else
@@ -449,13 +486,17 @@ var pesoxkm=1
   
 }
 
+
+
+
+
 //obtengo los pedidos pendientes cercanos.
 export async function getPedidosPendientesParaDelivery(req, res)
 {
   var {lati,longi} = req.body;
   var estadopedido=1
-  var maxkms=20000000
-
+  
+  
   try {
    /*hay que usar lati y longi para buscar los pedidos cercanos */
     let pedidos = await Pedido.findAll({
@@ -480,25 +521,35 @@ export async function getPedidosPendientesParaDelivery(req, res)
     });
 
     if(pedidos){
-      //filtro los cercanos 
+                 var maxkms=40; 
+                 const param = await Parametro.findOne({
+                 where: {
+                 par_nombre:'max_kms'
+                         },
+                 attributes: ['par_id','par_nombre','par_value']
+                      });
+    
+                  if(param) maxkms=param.par_value;
+
+       //filtro los cercanos 
       var pedidoscercanos=[] ;
       pedidos.forEach( 
         (ped) => { 
          var lat =ped.ped_latitudinicio;
          var long=ped.ped_longitudinicio;
-        if(parseInt(getKilometros(lat,long,lati,longi))<=maxkms)
+        if(parseFloat(getKilometros(lat,long,lati,longi))<=maxkms)
          {
           pedidoscercanos.push(ped);
          }
 
-            }
+          }
           );
       
 
           res.json(
           {
             message:'pedidos pendientes son:',
-            pedidos
+            pedidoscercanos
           })
 
 
@@ -516,6 +567,7 @@ export async function getPedidosPendientesParaDelivery(req, res)
     });
 }
 }
+
 //asignacion de pedido a delivery
 export async function asignarPedidoADelivery(req, res)
 {
@@ -583,23 +635,226 @@ catch (error) {
   });
 }
 }
-/* obtengo el precio del envio antes de dar el ok o no al registro 
-pedido*/ 
-export  function getPrecioEnvio(req, res)
-{
-  var {lati,longi,latf,longf} = req.body;
-  var pesoxkm=10;
-  var kms=getKilometros(latf,longf,lati,longi);
 
-  var  envio=    getPrecioEnvioPorReglas(1,19,kms*pesoxkm,kms,10,1,4343);
- 
-  //const re=  getPorcentajeEnvioPorReglas(0, 21, 500 ,11,1, 333);
-  //console.log(re);
-  res.json(
+/*obtengo el precio del envio con las reglas*/
+export async  function getPrecioEnvio(req, res)
+{
+var {idusuario,lati,longi,latf,longf} = req.body;
+
+try{
+let usuario = await Usuario.findOne({
+    where: {
+      id:idusuario
+    },
+    attributes: [ 
+      'id',
+      'nombre',
+      'pass',
+      'mail',
+      'rol',
+      'puntaje',
+      'nivel',
+      'foto',
+      'cantEnvios',
+      'redsocial',
+      'uidfirebase']
+
+});
+
+// si el registro exite
+if (usuario) 
+{
+  var peso_kms=5 
+  
+  const param = await Parametro.findOne({
+    where: {
+    par_nombre:'pesos_km'
+            },
+    attributes: ['par_id','par_nombre','par_value']
+         });
+
+   if(param)  peso_kms=param.par_value;
+  
+  var nivel=usuario.nivel;
+  var cantEnvios=usuario.cantEnvios;
+  var puntaje= usuario.points;
+  var kms  = getKilometros(latf,longf,lati,longi);
+
+  var date = new Date();
+  var currenthour = date.getHours();
+  var currentnumberday=date.getDay();
+  var kms=getKilometros(latf,longf,lati,longi);
+  var envio= getPrecioEnvioPorReglas(currentnumberday,currenthour,kms*peso_kms,kms,cantEnvios,nivel,puntaje);
+  
+    res.json(
     {
      message:'valor envio',
      envio
-  }
-  );
+     }
+     );
+ }
+else 
+{  
+  res.status(500).json({
+    message:'No se encontro el usuario.'      
+  })
+}
 
+}
+catch (error) {
+  res.status(500).json({
+      message:'',
+      data:{error}
+  });
+}
+
+}
+
+/*obtengo el porcentaje del envio para el delivery 
+*/ 
+export async  function getPorcentajeDelivery(req, res)
+{
+
+var {idusuario,iddelivery,lati,longi,latf,longf} = req.body;
+
+try{
+    let usuarioCliente = await Usuario.findOne({
+        where: {
+          id:idusuario
+        },
+        attributes: [ 
+          'id',
+          'nombre',
+          'pass',
+          'mail',
+          'rol',
+          'puntaje',
+          'nivel',
+          'foto',
+          'cantEnvios',
+          'redsocial',
+          'uidfirebase']
+    
+    });
+
+    let usuarioDelivery = await Usuario.findOne({
+      where: {
+        id:iddelivery
+      },
+      attributes: [ 
+        'id',
+        'nombre',
+        'pass',
+        'mail',
+        'rol',
+        'puntaje',
+        'nivel',
+        'foto',
+        'cantEnvios',
+        'redsocial',
+        'uidfirebase']
+  
+  });
+
+  if (usuarioCliente && usuarioDelivery) 
+  {
+ 
+  var peso_kms=5 ;
+  
+  const param = await Parametro.findOne({
+    where: {
+    par_nombre:'pesos_km'
+            },
+    attributes: ['par_id','par_nombre','par_value']
+         });
+
+   if(param) peso_kms=param.par_value;
+ 
+      var nivelCliente=usuarioCliente.nivel;
+      var cantEnviosCliente=usuarioCliente.cantEnvios;
+      var puntajeCliente= usuarioCliente.points;
+      var nivelDelivery=usuarioDelivery.nivel;
+    
+      var cantEnviosDelivery=usuarioDelivery.cantEnvios;
+    
+      var puntajeDelivery= usuarioDelivery.points;
+    
+      var kms  = getKilometros(latf,longf,lati,longi);
+      var date = new Date();
+      var currenthour = date.getHours();
+      var currentnumberday=date.getDay()
+    
+     var envio   = getPrecioEnvioPorReglas(currentnumberday,currenthour,kms*peso_kms,kms,cantEnviosCliente,nivelCliente,puntajeCliente);
+     
+     var porcentaje=getPorcentajeEnvioPorReglas(currentnumberday,currenthour,envio,cantEnviosDelivery,nivelDelivery, puntajeDelivery);
+    
+     res.json(
+      {
+       message:'valor porcentaje',
+       porcentaje,
+       envio
+       }
+       );
+  }
+  else if(!usuarioCliente && !usuarioDelivery)
+  {  
+     res.status(500).json({
+      message:'No se encontro el usuario cliente y delivery.'      
+    })
+  }
+  else if(!usuarioCliente)
+  {  
+    res.status(500).json({
+     message:'No se encontro el usuario cliente.'      
+   })
+ }
+ else
+ {  
+  res.status(500).json({
+   message:'No se encontro el usuario delivery.'      
+ })
+
+}
+}
+  catch (error) {
+    res.status(500).json({
+        message:'algo no funciono',
+        data:{error}
+    });
+  }
+  }
+
+  
+export async function deletePedido(req, res)
+{
+var {id} = req.paramsparams;
+ try {
+
+  //borro los items del pedido
+  await Item.destroy({
+    where: {
+      item_pedidoid:id
+    }});
+
+ 
+  await Pedido.destroy({
+        where: {
+          ped_id:id
+        }})
+        .then(function (deletedRecord) {
+            if(deletedRecord === 1){
+                res.status(200).json({message:"Se borro correctamente"});          
+            }
+            else
+            {
+                res.status(404).json({message:"no existe registo"})
+            }
+        })
+
+} catch (error) {
+    res.status(500).json({
+        message:'Hubo un error',
+        data:{error}
+    });
+}
 }
