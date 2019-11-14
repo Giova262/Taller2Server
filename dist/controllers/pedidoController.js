@@ -23,9 +23,9 @@ var _User = _interopRequireDefault(require("../models/User"));
 
 var _Item = _interopRequireDefault(require("../models/Item"));
 
-var _parametro = _interopRequireDefault(require("../models/parametro"));
+var _Parametro = _interopRequireDefault(require("../models/Parametro"));
 
-var _service = require("../service/service");
+var _Service = require("../service/Service");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
@@ -533,7 +533,7 @@ function _registrarPedido() {
 
             peso_kms = 5;
             _context8.next = 37;
-            return _parametro["default"].findOne({
+            return _Parametro["default"].findOne({
               where: {
                 par_nombre: 'pesos_km'
               },
@@ -546,12 +546,12 @@ function _registrarPedido() {
             nivel = usr.nivel;
             cantEnvios = usr.cantEnvios;
             puntaje = usr.points;
-            kms = (0, _service.getKilometros)(latf, longf, lati, longi);
+            kms = (0, _Service.getKilometros)(latf, longf, lati, longi);
             date = new Date();
             currenthour = date.getHours();
             currentnumberday = date.getDay();
-            kms = (0, _service.getKilometros)(latf, longf, lati, longi);
-            envio = (0, _service.getPrecioEnvioPorReglas)(currentnumberday, currenthour, kms * peso_kms, kms, cantEnvios, nivel, puntaje);
+            kms = (0, _Service.getKilometros)(latf, longf, lati, longi);
+            envio = (0, _Service.getPrecioEnvioPorReglas)(currentnumberday, currenthour, kms * peso_kms, kms, cantEnvios, nivel, puntaje);
 
           case 48:
             total = parseInt(total);
@@ -643,7 +643,7 @@ function _getPedidosPendientesParaDelivery() {
 
             maxkms = 20;
             _context9.next = 10;
-            return _parametro["default"].findOne({
+            return _Parametro["default"].findOne({
               where: {
                 par_nombre: 'maxkms'
               },
@@ -664,7 +664,7 @@ function _getPedidosPendientesParaDelivery() {
 
               var _long = parseFloat(ped.ped_longitudinicio);
 
-              if (parseFloat((0, _service.getKilometros)(lat, _long, lati, longi)) <= maxkms) {
+              if (parseFloat((0, _Service.getKilometros)(lat, _long, lati, longi)) <= maxkms) {
                 pedidoscercanos.push(ped);
               }
             });
@@ -835,7 +835,7 @@ function _getPrecioEnvio() {
 
             peso_kms = 5;
             _context11.next = 9;
-            return _parametro["default"].findOne({
+            return _Parametro["default"].findOne({
               where: {
                 par_nombre: 'pesos_km'
               },
@@ -848,12 +848,12 @@ function _getPrecioEnvio() {
             nivel = usuario.nivel;
             cantEnvios = usuario.cantEnvios;
             puntaje = usuario.points;
-            kms = (0, _service.getKilometros)(latf, longf, lati, longi);
+            kms = (0, _Service.getKilometros)(latf, longf, lati, longi);
             date = new Date();
             currenthour = date.getHours();
             currentnumberday = date.getDay();
-            kms = (0, _service.getKilometros)(latf, longf, lati, longi);
-            envio = (0, _service.getPrecioEnvioPorReglas)(currentnumberday, currenthour, kms * peso_kms, kms, cantEnvios, nivel, puntaje);
+            kms = (0, _Service.getKilometros)(latf, longf, lati, longi);
+            envio = (0, _Service.getPrecioEnvioPorReglas)(currentnumberday, currenthour, kms * peso_kms, kms, cantEnvios, nivel, puntaje);
             res.json({
               message: 'valor envio',
               envio: envio
@@ -934,7 +934,7 @@ function _getPorcentajeDelivery() {
 
             peso_kms = 5;
             _context12.next = 12;
-            return _parametro["default"].findOne({
+            return _Parametro["default"].findOne({
               where: {
                 par_nombre: 'pesos_km'
               },
@@ -950,12 +950,12 @@ function _getPorcentajeDelivery() {
             nivelDelivery = usuarioDelivery.nivel;
             cantEnviosDelivery = usuarioDelivery.cantEnvios;
             puntajeDelivery = usuarioDelivery.points;
-            kms = (0, _service.getKilometros)(latf, longf, lati, longi);
+            kms = (0, _Service.getKilometros)(latf, longf, lati, longi);
             date = new Date();
             currenthour = date.getHours();
             currentnumberday = date.getDay();
-            envio = (0, _service.getPrecioEnvioPorReglas)(currentnumberday, currenthour, kms * peso_kms, kms, cantEnviosCliente, nivelCliente, puntajeCliente);
-            porcentaje = (0, _service.getPorcentajeEnvioPorReglas)(currentnumberday, currenthour, envio, cantEnviosDelivery, nivelDelivery, puntajeDelivery);
+            envio = (0, _Service.getPrecioEnvioPorReglas)(currentnumberday, currenthour, kms * peso_kms, kms, cantEnviosCliente, nivelCliente, puntajeCliente);
+            porcentaje = (0, _Service.getPorcentajeEnvioPorReglas)(currentnumberday, currenthour, envio, cantEnviosDelivery, nivelDelivery, puntajeDelivery);
             res.json({
               message: 'valor porcentaje',
               porcentaje: porcentaje,

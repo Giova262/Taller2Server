@@ -2,9 +2,9 @@ import Pedido from '../models/Pedido'
 import Producto from '../models/Producto'
 import User from '../models/User'
 import Item from '../models/Item'
-import Parametro from '../models/parametro'
+import Parametro from '../models/Parametro'
 
-import {getKilometros, getPrecioEnvioPorReglas, getPorcentajeEnvioPorReglas}  from '../service/service'
+import {getKilometros, getPrecioEnvioPorReglas, getPorcentajeEnvioPorReglas}  from '../service/Service'
 
 
 //Actualizar pedido

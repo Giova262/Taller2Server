@@ -8,7 +8,7 @@ exports.deleteParametro = deleteParametro;
 exports.updateParametro = updateParametro;
 exports.registrarParametro = registrarParametro;
 
-var _parametro = _interopRequireDefault(require("../models/parametro"));
+var _Parametro = _interopRequireDefault(require("../models/Parametro"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
@@ -32,7 +32,7 @@ function _getAll() {
           case 0:
             _context.prev = 0;
             _context.next = 3;
-            return _parametro["default"].findAll();
+            return _Parametro["default"].findAll();
 
           case 3:
             parametros = _context.sent;
@@ -87,7 +87,7 @@ function _deleteParametro() {
             nombre = req.params.nombre;
             _context2.prev = 1;
             _context2.next = 4;
-            return _parametro["default"].destroy({
+            return _Parametro["default"].destroy({
               where: {
                 par_nombre: nombre
               }
@@ -144,7 +144,7 @@ function _updateParametro() {
             _req$body = req.body, nombre = _req$body.nombre, value = _req$body.value;
             _context3.prev = 1;
             _context3.next = 4;
-            return _parametro["default"].findOne({
+            return _Parametro["default"].findOne({
               where: {
                 par_nombre: nombre
               }
@@ -207,7 +207,7 @@ function _registrarParametro() {
             _req$body2 = req.body, nombre = _req$body2.nombre, value = _req$body2.value;
             _context4.prev = 1;
             _context4.next = 4;
-            return _parametro["default"].create({
+            return _Parametro["default"].create({
               par_nombre: nombre,
               par_value: value
             }, {

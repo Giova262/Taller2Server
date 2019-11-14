@@ -1,4 +1,4 @@
-import Parametro from '../models/parametro';
+import Parametro from '../models/Parametro';
 
 
 /** Obtener todos los comercios */
