@@ -19,6 +19,8 @@ var _comercios = _interopRequireDefault(require("./rutas/comercios"));
 
 var _parametros = _interopRequireDefault(require("./rutas/parametros"));
 
+var _cors = _interopRequireDefault(require("cors"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
@@ -34,18 +36,19 @@ var app = (0, _express["default"])();
 /** Middlewares */
 //app.use(express.json())
 
-/*app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "YOUR-DOMAIN.TLD"); // update to match the domain you will make the request from
+/*
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*"); // update to match the domain you will make the request from
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
-  });
-*/
+  });*/
 //app.use(require('connect').bodyParser());
 
 app.use((0, _express.json)());
 app.set('port', process.env.PORT || 5000);
 /*cors*/
 
+app.use((0, _cors["default"])());
 /** Rutas */
 
 app.use('/api/user', _usuarios["default"]);

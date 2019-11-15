@@ -20,7 +20,7 @@ import {
 /** Rutas */
 
 /* Obtener todos los comercios */
-router.get('/all', ensureToken,chequeoToken,getAll );
+router.get('/', ensureToken,chequeoToken,getAll );
 
  /* delete comercio*/
  router.delete('/:id',ensureToken,chequeoToken, deleteComercio);

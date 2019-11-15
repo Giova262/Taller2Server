@@ -17,7 +17,7 @@ var router = (0, _express.Router)();
 /** Rutas */
 
 /* Obtener todos los comercios */
-router.get('/all', _userController.ensureToken, _userController.chequeoToken, _comercioController.getAll);
+router.get('/', _userController.ensureToken, _userController.chequeoToken, _comercioController.getAll);
 /* delete comercio*/
 
 router["delete"]('/:id', _userController.ensureToken, _userController.chequeoToken, _comercioController.deleteComercio);
