@@ -9,6 +9,7 @@ import {
     deleteComercio,
     updateComercio,
     registrarComercio,
+    getOne
  } from '../controllers/comercioController';
 
 
@@ -22,11 +23,14 @@ import {
 /* Obtener todos los comercios */
 router.get('/', ensureToken,chequeoToken,getAll );
 
+/* Obtener comercio por id */
+router.get('/:id', ensureToken,chequeoToken,getOne );
+
  /* delete comercio*/
  router.delete('/:id',ensureToken,chequeoToken, deleteComercio);
 
  /* update comercio*/
- router.put('/',ensureToken,chequeoToken,updateComercio);
+ router.put('/:id',ensureToken,chequeoToken,updateComercio);
 
  /* creo un comercio*/
  router.post('/register', ensureToken,chequeoToken,registrarComercio);

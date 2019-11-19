@@ -1,6 +1,48 @@
 import Comercio from '../models/Comercio';
 
 
+/**Obtener un solo comercio */
+export async function getOne(req,res){
+
+    const {id } = req.params;
+        
+    try {
+
+        const comercioFound = await Comercio.findOne({
+            where: {
+                com_id:id
+            },
+            attributes: [
+                
+            'com_nombre',
+            'com_direccion',
+            'com_descripcion',
+            'com_latitud',
+            'com_longitud',
+            'com_estado'
+            ]
+
+        });
+
+        if(comercioFound){
+    
+            res.json(comercioFound);
+
+        }else{
+            res.json({
+                message:'No se encuentra registrado el usuario.'      
+            })
+        }
+        
+    } catch (error) {
+        res.status(500).json({
+            message:'Something goes wrong ',
+            data:{error}
+        });
+    }
+}
+
+
 /** Obtener todos los comercios */
 export async function getAll(req,res){
 
@@ -67,10 +109,11 @@ var {id} = req.params;
 export async function updateComercio(req, res)
 {
 
-var {idcomercio,nombre,direccion,descrip,lat,long,estado} = req.body;
+var {id} = req.params;
+var {nombre,direccion,descrip,lat,long,estado} = req.body;
 
 try{
-await Comercio.find({ where:  {com_id:idcomercio } })
+await Comercio.find({ where:  {com_id:id } })
 .on('success', function (Comercio) 
 {
 // si el registro exite
