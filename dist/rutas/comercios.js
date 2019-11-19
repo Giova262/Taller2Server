@@ -26,6 +26,6 @@ router["delete"]('/:id', _userController.ensureToken, _userController.chequeoTok
 router.put('/', _userController.ensureToken, _userController.chequeoToken, _comercioController.updateComercio);
 /* creo un comercio*/
 
-router.post('/', _userController.ensureToken, _userController.chequeoToken, _comercioController.registrarComercio);
+router.post('/register', _userController.ensureToken, _userController.chequeoToken, _comercioController.registrarComercio);
 var _default = router;
 exports["default"] = _default;

@@ -29,6 +29,6 @@ router.get('/', ensureToken,chequeoToken,getAll );
  router.put('/',ensureToken,chequeoToken,updateComercio);
 
  /* creo un comercio*/
- router.post('/', ensureToken,chequeoToken,registrarComercio);
+ router.post('/register', ensureToken,chequeoToken,registrarComercio);
 
 export default router
