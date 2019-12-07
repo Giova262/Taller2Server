@@ -18,7 +18,9 @@ import {
     getDeliverysPorUsuario,
     getUsuariosPorDelivery,
     updateUser,
-    deleteUser
+    deleteUser,
+    getUsuariosTop10,
+    getDeliverysTop10
     } from '../controllers/userController';
 
     /** Rutas */
@@ -50,8 +52,12 @@ router.put('/:id',ensureToken,chequeoToken, updateUser );
 /** Actualizar usuario*/
 router.delete('/:id',ensureToken,chequeoToken, deleteUser);
 
+/** usuarios top 10 */
+router.get('/Top10Users',ensureToken,chequeoToken, getUsuariosTop10);
+
+/** deliveries top 10 */
+router.get('/Top10Deliverys',ensureToken,chequeoToken, getDeliverysTop10);
 
 
 /** Exporto */
-
 export default router

@@ -1,25 +1,9 @@
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.getPrecioEnvioPorReglas = getPrecioEnvioPorReglas;
-exports.getPorcentajeEnvioPorReglas = getPorcentajeEnvioPorReglas;
-exports.getKilometros = getKilometros;
-
-var _nools = _interopRequireDefault(require("nools"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
-
-var flowUser = _nools["default"].compile(require.resolve('../../res/user_reglas.nools'));
-
-var UserDatos = flowUser.getDefined('UsuarioDatos');
-
-var flowDelivery = _nools["default"].compile(require.resolve('../../res/delivery_reglas.nools'));
-
-var DeliveryDatos = flowDelivery.getDefined('DeliveryDatos');
-
-function getPrecioEnvioPorReglas(ndia, hora, envio, kms, cantPedidos, nivel, points) {
+import nools from 'nools';
+const flowUser = nools.compile(require.resolve('../../res/user_reglas.nools'));
+const UserDatos = flowUser.getDefined('UsuarioDatos');
+const flowDelivery = nools.compile(require.resolve('../../res/delivery_reglas.nools'));
+const DeliveryDatos = flowDelivery.getDefined('DeliveryDatos');
+export function getPrecioEnvioPorReglas(ndia, hora, envio, kms, cantPedidos, nivel, points) {
   var usersData = [new UserDatos({
     envio: envio,
     kms: kms,
@@ -40,8 +24,7 @@ function getPrecioEnvioPorReglas(ndia, hora, envio, kms, cantPedidos, nivel, poi
   session.dispose();
   return r;
 }
-
-function getPorcentajeEnvioPorReglas(ndia, hora, envio, cantidadEnviosDia, nivel, points) {
+export function getPorcentajeEnvioPorReglas(ndia, hora, envio, cantidadEnviosDia, nivel, points) {
   var deliveryData = [new DeliveryDatos({
     envio: envio,
     cantidadEnviosDia: cantidadEnviosDia,
@@ -62,8 +45,7 @@ function getPorcentajeEnvioPorReglas(ndia, hora, envio, cantidadEnviosDia, nivel
   return r;
 } //devuelve los kms entre dos posiciones
 
-
-function getKilometros(lat1, lon1, lat2, lon2) {
+export function getKilometros(lat1, lon1, lat2, lon2) {
   //local
   function rad(x) {
     return x * Math.PI / 180;

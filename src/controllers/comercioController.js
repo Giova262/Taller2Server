@@ -105,6 +105,74 @@ var {id} = req.params;
 }
 
 
+export async function getAllActivos(req, res)
+{
+
+    var estadoActivo=1
+    try{
+        let comercios= Comercio.find({ where:  {com_estado:estadoActivo } })
+        
+        if(comercios){
+
+            res.json({
+ 
+                 message:'todos los comercios activos registrados',
+                 data:comercios
+ 
+             });          
+         }
+         else{
+             res.status(500).json({
+                 message:'No se encontro registros de comercios.',
+                 data: {}      
+             })
+         }
+        
+        
+   
+       } catch (error) {
+           res.status(500).json({
+               message:'algo salio mal obteniendo los comercios',
+               data:{error}
+           });
+       } 
+}
+
+
+export async function getAllNoActivos(req, res)
+{
+
+    var estadoNoActivo=2
+    try{
+        let comercios= Comercio.find({ where:  {com_estado:estadoNoActivo } })
+        
+        if(comercios){
+
+            res.json({
+ 
+                 message:'todos los comercios no activos registrados',
+                 data:comercios
+ 
+             });          
+         }
+         else{
+             res.status(500).json({
+                 message:'No se encontro registros de comercios.',
+                 data: {}      
+             })
+         }
+        
+        
+   
+       } catch (error) {
+           res.status(500).json({
+               message:'algo salio mal obteniendo los comercios',
+               data:{error}
+           });
+       } 
+}
+
+
 
 export async function updateComercio(req, res)
 {

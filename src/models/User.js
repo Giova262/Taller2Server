@@ -37,6 +37,9 @@ const Test = sequelize.define('users',{
     },
     uidfirebase:{
         type: Sequelize.TEXT
+    },
+	token:{
+        type: Sequelize.TEXT
     }
 
 });

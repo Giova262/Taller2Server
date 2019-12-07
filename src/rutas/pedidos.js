@@ -13,10 +13,15 @@ import { all,
 		 getPedidosUsuario,
 		 getPedidosDelivery,
 		 getPedidosPendientesParaDelivery,
+		 getPedidosPendientes,
+		 getPedidosAsignados,
+		 getPedidosCancelados,
 		 asignarPedidoADelivery,
 		 getPedidosHistorialDelivery,
 		 updatePedido,
-		 deletePedido
+		 deletePedido,
+		 getTotalFacturadoUsuario,
+		 getTotalFacturadoDelivery
         } from '../controllers/pedidoController';
 
 import { 
@@ -27,6 +32,21 @@ import {
 /* Rutas */
 /*obtener todos los pedidos*/
 router.get('/all',ensureToken,chequeoToken,all);
+
+/*obtener facturado id usuario*/
+router.get('/TotalFacturadoUsuario/:id',ensureToken,chequeoToken,getTotalFacturadoUsuario);
+
+/*obtener facturado id delivery*/
+router.get('/TotalFacturadoDelivery/:id',ensureToken,chequeoToken,getTotalFacturadoDelivery);
+
+/*obtener todos los pedidos pendientes*/
+router.get('/Pendientes',ensureToken,chequeoToken,getPedidosPendientes);
+
+/*obtener todos los pedidos asignados*/
+router.get('/Asignados',ensureToken,chequeoToken,getPedidosAsignados);
+
+/*obtener todos los pedidos asignados*/
+router.get('/Cancelados',ensureToken,chequeoToken,getPedidosCancelados);
 
 /* Obtengo el precio del envio antes de dar el registro del mismo en pendiente*/
 router.get('/getPrecioEnvio',ensureToken,chequeoToken,getPrecioEnvio);
@@ -55,9 +75,8 @@ router.get('/getHistorialDelivery/:idDelivery',ensureToken,chequeoToken, getPedi
 /** Pedido entregado */
 router.put('/',ensureToken,chequeoToken,updatePedido);
 
-/* delete pedido*/
+/**  delete pedido**/
 router.delete('/:id',ensureToken,chequeoToken, deletePedido);
-
 
  /* Exporto */
 export default router

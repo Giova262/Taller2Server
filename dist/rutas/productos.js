@@ -1,38 +1,28 @@
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports["default"] = void 0;
-
-var _express = require("express");
-
-var _productoController = require("../controllers/productoController");
-
-var _userController = require("../controllers/userController");
-
 /** Rutas de test */
-var router = (0, _express.Router)();
+import { Router } from 'express';
+const router = Router();
 /** Controladores */
 
+import { getAll, getProductosPorComercio, getProductosPorPedido, deleteProducto, updateProducto, registrarProducto } from '../controllers/productoController';
+import { ensureToken, chequeoToken } from '../controllers/userController';
 /** Rutas */
 
 /** Obtener todos los productos */
-router.get('/all', _userController.ensureToken, _userController.chequeoToken, _productoController.getAll);
+
+router.get('/all', ensureToken, chequeoToken, getAll);
 /* Obtengo los productos de un idcomercio*/
 
-router.get('/productosPorComercio/:idcomercio', _userController.ensureToken, _userController.chequeoToken, _productoController.getProductosPorComercio);
+router.get('/productosPorComercio/:idcomercio', ensureToken, chequeoToken, getProductosPorComercio);
 /* Obtengo los productos de un idpedido*/
 
-router.get('/productosPorPedido/:idpedido', _userController.ensureToken, _userController.chequeoToken, _productoController.getProductosPorPedido);
+router.get('/productosPorPedido/:idpedido', ensureToken, chequeoToken, getProductosPorPedido);
 /* delete producto*/
 
-router["delete"]('/:id', _userController.ensureToken, _userController.chequeoToken, _productoController.deleteProducto);
+router.delete('/:id', ensureToken, chequeoToken, deleteProducto);
 /* update producto*/
 
-router.put('/', _userController.ensureToken, _userController.chequeoToken, _productoController.updateProducto);
+router.put('/', ensureToken, chequeoToken, updateProducto);
 /* creo un producto*/
 
-router.post('/', _userController.ensureToken, _userController.chequeoToken, _productoController.registrarProducto);
-var _default = router;
-exports["default"] = _default;
+router.post('/', ensureToken, chequeoToken, registrarProducto);
+export default router;

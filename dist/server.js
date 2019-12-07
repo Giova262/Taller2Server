@@ -1,38 +1,18 @@
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports["default"] = void 0;
-
-var _express = _interopRequireWildcard(require("express"));
-
-var _bodyParser = _interopRequireDefault(require("body-parser"));
-
-var _usuarios = _interopRequireDefault(require("./rutas/usuarios"));
-
-var _productos = _interopRequireDefault(require("./rutas/productos"));
-
-var _pedidos = _interopRequireDefault(require("./rutas/pedidos"));
-
-var _comercios = _interopRequireDefault(require("./rutas/comercios"));
-
-var _parametros = _interopRequireDefault(require("./rutas/parametros"));
-
-var _cors = _interopRequireDefault(require("cors"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
-
-function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; if (obj != null) { var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
-
 /** Configuracion del servidor */
-//import morgan from 'morgan'
+import express, { json } from 'express';
+import bodyParser from 'body-parser';
+import rutasUsuario from './rutas/usuarios';
+import rutasProductos from './rutas/productos';
+import rutasPedidos from './rutas/pedidos';
+import rutasComercios from './rutas/comercios';
+import rutasParametros from './rutas/parametros';
+import rutasEstadisticas from './rutas/estadisticas';
+import cors from 'cors'; //import morgan from 'morgan'
 //app.use( morgan('dev') )
 
 /** Inicializacion */
-var app = (0, _express["default"])();
+
+const app = express();
 /** Middlewares */
 //app.use(express.json())
 
@@ -44,18 +24,18 @@ app.use(function(req, res, next) {
   });*/
 //app.use(require('connect').bodyParser());
 
-app.use((0, _express.json)());
+app.use(json());
 app.set('port', process.env.PORT || 5000);
 /*cors*/
 
-app.use((0, _cors["default"])());
+app.use(cors());
 /** Rutas */
 
-app.use('/api/user', _usuarios["default"]);
-app.use('/api/producto', _productos["default"]);
-app.use('/api/pedido', _pedidos["default"]);
-app.use('/api/comercio', _comercios["default"]);
-app.use('/api/parametro', _parametros["default"]);
+app.use('/api/user', rutasUsuario);
+app.use('/api/producto', rutasProductos);
+app.use('/api/pedido', rutasPedidos);
+app.use('/api/comercio', rutasComercios);
+app.use('/api/parametro', rutasParametros);
 app.get('/', function (req, res) {
   res.json({
     "mensaje": "Server Foodie ",
@@ -65,5 +45,4 @@ app.get('/', function (req, res) {
 });
 /** Exporto */
 
-var _default = app;
-exports["default"] = _default;
+export default app;

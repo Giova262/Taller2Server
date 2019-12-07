@@ -1,47 +1,44 @@
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports["default"] = void 0;
-
-var _express = require("express");
-
-var _userController = require("../controllers/userController");
-
 /** Rutas de test */
-var router = (0, _express.Router)();
+import { Router } from 'express';
+const router = Router();
 /** Controladores */
 
+import { getAll, register, login, consultaPerfil, ensureToken, getOne, chequeoToken, getDeliverysPorUsuario, getUsuariosPorDelivery, updateUser, deleteUser, getUsuariosTop10, getDeliverysTop10 } from '../controllers/userController';
 /** Rutas */
 
 /** Obtener todos los usuarios */
-router.get('/', _userController.getAll);
+
+router.get('/', getAll);
 /** Obtener usuario por id */
 
-router.get('/:id', _userController.getOne);
+router.get('/:id', getOne);
 /** registrar usuarios */
 
-router.post('/register', _userController.register);
+router.post('/register', register);
 /** login usuarios */
 
-router.post('/login', _userController.login);
+router.post('/login', login);
 /** consultar perfil */
 
-router.get('/consulta', _userController.ensureToken, _userController.chequeoToken, _userController.consultaPerfil);
+router.get('/consulta', ensureToken, chequeoToken, consultaPerfil);
 /** consultar usuarios deliverys de pedidos por userid */
 
-router.get('/getDeliverysPorUsuario/:iduser', _userController.ensureToken, _userController.chequeoToken, _userController.getDeliverysPorUsuario);
+router.get('/getDeliverysPorUsuario/:iduser', ensureToken, chequeoToken, getDeliverysPorUsuario);
 /** consultar usuarios deliverys de pedidos por deliveryid */
 
-router.get('/getUsuariosPorDelivery/:iddelivery', _userController.ensureToken, _userController.chequeoToken, _userController.getUsuariosPorDelivery);
+router.get('/getUsuariosPorDelivery/:iddelivery', ensureToken, chequeoToken, getUsuariosPorDelivery);
 /** Actualizar usuario*/
 
-router.put('/:id', _userController.ensureToken, _userController.chequeoToken, _userController.updateUser);
+router.put('/:id', ensureToken, chequeoToken, updateUser);
 /** Actualizar usuario*/
 
-router["delete"]('/:id', _userController.ensureToken, _userController.chequeoToken, _userController.deleteUser);
+router.delete('/:id', ensureToken, chequeoToken, deleteUser);
+/** usuarios top 10 */
+
+router.get('/Top10Users', ensureToken, chequeoToken, getUsuariosTop10);
+/** deliveries top 10 */
+
+router.get('/Top10Deliverys', ensureToken, chequeoToken, getDeliverysTop10);
 /** Exporto */
 
-var _default = router;
-exports["default"] = _default;
+export default router;

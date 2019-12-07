@@ -115,8 +115,8 @@ export async function register(req,res){
             foto:foto,
             cantEnvios:cantEnvios,
             redsocial:redsocial,
-            uidfirebase:uidfirebase
-
+            uidfirebase:uidfirebase,
+            token:token
             },
             {
                 fields:[              
@@ -129,14 +129,18 @@ export async function register(req,res){
                     'foto',
                     'cantEnvios',
                     'redsocial',
-                    'uidfirebase'
+                    'uidfirebase',           
+					'token'
+         
                 ]
             });
             
         if(nuevoUsuario){
 
             const token = jwt.sign({nuevoUsuario}, 'key' );
-        
+            //guardo el token
+		    await nuevoUsuario.update({token:token});
+
              res.json({
                message:'Usuario Creado.Login Success.', 
                status: 1 ,                                    
@@ -190,7 +194,8 @@ export async function login(req,res){
                         'foto',
                         'cantEnvios',
                         'redsocial',
-                        'uidfirebase']
+                        'uidfirebase',
+						'token']
                     });
                 
                     if(userFound){
@@ -198,7 +203,10 @@ export async function login(req,res){
                         //....Encontre al usuario y genero nuevo Token....
 
                        const token = jwt.sign({userFound}, 'key' );
-                
+                       //guardo el token
+         		       await userFound.update({token:token});
+
+          		  
                         res.json({
                             message:'Login Success.',
                             status: 1 ,
@@ -223,7 +231,7 @@ export async function login(req,res){
                             var cantEnvios = 0
                             var redsocial = userRecord.toJSON().providerData[0].providerId
                             var uidfirebase = uid
-    
+                            var tokeni=-1
                             try {
     
                                 let nuevoUsuario = await Test.create({
@@ -237,8 +245,8 @@ export async function login(req,res){
                                     foto:foto,
                                     cantEnvios:cantEnvios,
                                     redsocial:redsocial,
-                                    uidfirebase:uidfirebase
-                                    
+                                    uidfirebase:uidfirebase,
+                                    token:tokeni                       
                                     },
                                     {
                                         fields:[   
@@ -252,13 +260,16 @@ export async function login(req,res){
                                             'foto',
                                             'cantEnvios',
                                             'redsocial',
-                                            'uidfirebase'
+                                            'uidfirebase',
+											'token'
                                         ]
                                     });
                                     
                                 if(nuevoUsuario){
                         
                                     const token = jwt.sign({nuevoUsuario}, 'key' );
+                                    //guardo el token
+                     		        await  nuevoUsuario.update({token:token});
         
                                     res.json({
                                         message:'Usuario Creado.Login Success.', 
@@ -331,7 +342,8 @@ export async function login(req,res){
                 'foto',
                 'cantEnvios',
                 'redsocial',
-                'uidfirebase']
+                'uidfirebase',									
+				'token']
             });
         
             if(userFound){
@@ -339,6 +351,7 @@ export async function login(req,res){
                 
         
                const token = jwt.sign({userFound}, 'key' );
+               await userFound.update({token:token});
         
                 res.json({
                     message:'Login Success.', 
@@ -383,8 +396,17 @@ export async function consultaPerfil(req,res){
 
 export async function chequeoToken(req,res,next){
 
-    jwt.verify(req.headers['token'], 'key' , (err,data)=>{
-        if(err){
+   const token=req.headers['token'];
+
+    jwt.verify(token, 'key' , (err,data)=>{
+     
+	 //me fijo si existe el token  
+    const userFound =  Test.findOne({
+                where: {
+                    token:token
+                } });
+        
+	if(err  || !userFound){
             console.log(req.headers['token'])
             console.log("Error en chequeo token")
             res.json({
@@ -556,4 +578,73 @@ if(usuarios){
          data:{error}
      });
  }
+ }
+
+
+ /*top usuarios 10*/
+export async function getUsuariosTop10(req,res)
+{
+var rolUsuario=1
+try{
+
+var sqlquery= 'select Distinct(users.*) from users WHERE users.rol='.concat(rolUsuario).concat(' ORDER BY puntaje DESC LIMIT 10');
+
+var  usuarios =  await sequelize.query(sqlquery ,{ type: sequelize.QueryTypes.SELECT});
+
+if(usuarios){
+
+           res.json({
+
+                message:'los 10 top usuarios',
+                usuarios
+
+            });
+        }
+        else{
+            res.status(500).json({
+                message:'No se encontro registros.'      
+            })
+        }
+       
+  
+      } catch (error) {
+          res.status(500).json({
+              message:'hubo un error',
+              data:{error}
+          });
+      } 
+ }
+
+  /*top deliveris 10*/
+export async function getDeliverysTop10(req,res)
+{
+var rolUsuario=2
+try{
+
+var sqlquery= 'select Distinct(users.*) from users WHERE users.rol='.concat(rolUsuario).concat(' ORDER BY puntaje DESC LIMIT 10');
+
+var  usuarios =  await sequelize.query(sqlquery ,{ type: sequelize.QueryTypes.SELECT});
+
+if(usuarios){
+
+           res.json({
+
+                message:'los 10 top usuarios',
+                usuarios
+
+            });
+        }
+        else{
+            res.status(500).json({
+                message:'No se encontro registros.'      
+            })
+        }
+       
+  
+      } catch (error) {
+          res.status(500).json({
+              message:'hubo un error',
+              data:{error}
+          });
+      } 
  }

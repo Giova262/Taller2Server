@@ -1,32 +1,22 @@
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports["default"] = void 0;
-
-var _express = require("express");
-
-var _parametroController = require("../controllers/parametroController");
-
-var _userController = require("../controllers/userController");
-
 /** Rutas de test */
-var router = (0, _express.Router)();
+import { Router } from 'express';
+const router = Router();
 /** Controladores */
 
+import { getAll, deleteParametro, updateParametro, registrarParametro } from '../controllers/parametroController';
+import { ensureToken, chequeoToken } from '../controllers/userController';
 /** Rutas */
 
 /* Obtener todos los parametros */
-router.get('/all', _userController.ensureToken, _userController.chequeoToken, _parametroController.getAll);
+
+router.get('/all', ensureToken, chequeoToken, getAll);
 /*borro parametro*/
 
-router["delete"]('/:nombre', _userController.ensureToken, _userController.chequeoToken, _parametroController.deleteParametro);
+router.delete('/:nombre', ensureToken, chequeoToken, deleteParametro);
 /* update parametro*/
 
-router.put('/', _userController.ensureToken, _userController.chequeoToken, _parametroController.updateParametro);
+router.put('/', ensureToken, chequeoToken, updateParametro);
 /* creo un parametro*/
 
-router.post('/', _userController.ensureToken, _userController.chequeoToken, _parametroController.registrarParametro);
-var _default = router;
-exports["default"] = _default;
+router.post('/', ensureToken, chequeoToken, registrarParametro);
+export default router;

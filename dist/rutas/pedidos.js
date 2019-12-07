@@ -1,56 +1,61 @@
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports["default"] = void 0;
-
-var _express = require("express");
-
-var _pedidoController = require("../controllers/pedidoController");
-
-var _userController = require("../controllers/userController");
-
-var router = (0, _express.Router)();
+import { Router } from 'express';
+const router = Router();
 /* Controladores 
 seguramente falten.
 */
 
+import { all, getPrecioEnvio, getPorcentajeDelivery, registrarPedido, getPedidosUsuario, getPedidosDelivery, getPedidosPendientesParaDelivery, getPedidosPendientes, getPedidosAsignados, getPedidosCancelados, asignarPedidoADelivery, getPedidosHistorialDelivery, updatePedido, deletePedido, getTotalFacturadoUsuario, getTotalFacturadoDelivery } from '../controllers/pedidoController';
+import { ensureToken, chequeoToken } from '../controllers/userController';
 /* Rutas */
 
 /*obtener todos los pedidos*/
-router.get('/all', _userController.ensureToken, _userController.chequeoToken, _pedidoController.all);
+
+router.get('/all', ensureToken, chequeoToken, all);
+/*obtener facturado id usuario*/
+
+router.get('/TotalFacturadoUsuario/:id', ensureToken, chequeoToken, getTotalFacturadoUsuario);
+/*obtener facturado id delivery*/
+
+router.get('/TotalFacturadoDelivery/:id', ensureToken, chequeoToken, getTotalFacturadoDelivery);
+/*obtener todos los pedidos pendientes*/
+
+router.get('/Pendientes', ensureToken, chequeoToken, getPedidosPendientes);
+/*obtener todos los pedidos asignados*/
+
+router.get('/Asignados', ensureToken, chequeoToken, getPedidosAsignados);
+/*obtener todos los pedidos asignados*/
+
+router.get('/Cancelados', ensureToken, chequeoToken, getPedidosCancelados);
 /* Obtengo el precio del envio antes de dar el registro del mismo en pendiente*/
 
-router.get('/getPrecioEnvio', _userController.ensureToken, _userController.chequeoToken, _pedidoController.getPrecioEnvio);
+router.get('/getPrecioEnvio', ensureToken, chequeoToken, getPrecioEnvio);
 /* Obtengo el porcentaje del envio para el delivery*/
 
-router.get('/getPorcentajeDelivery', _userController.ensureToken, _userController.chequeoToken, _pedidoController.getPorcentajeDelivery);
+router.get('/getPorcentajeDelivery', ensureToken, chequeoToken, getPorcentajeDelivery);
 /* registrarPedido */
 
-router.post('/registrarPedido', _userController.ensureToken, _userController.chequeoToken, _pedidoController.registrarPedido);
+router.post('/registrarPedido', ensureToken, chequeoToken, registrarPedido);
 /* Obtener pedido por idUsuario */
 
-router.get('/getPedidosUsuario/:idUsuario', _userController.ensureToken, _userController.chequeoToken, _pedidoController.getPedidosUsuario);
+router.get('/getPedidosUsuario/:idUsuario', ensureToken, chequeoToken, getPedidosUsuario);
 /* Obtener pedido por idDelivery */
 
-router.get('/getPedidosDelivery/:idDelivery', _userController.ensureToken, _userController.chequeoToken, _pedidoController.getPedidosDelivery);
+router.get('/getPedidosDelivery/:idDelivery', ensureToken, chequeoToken, getPedidosDelivery);
 /* Obtener pedidos cercanos al Delivery */
 
-router.get('/getPedidosPendientesParaDelivery/:lati&:longi', _userController.ensureToken, _userController.chequeoToken, _pedidoController.getPedidosPendientesParaDelivery);
+router.get('/getPedidosPendientesParaDelivery/:lati&:longi', ensureToken, chequeoToken, getPedidosPendientesParaDelivery);
 /* setear pedido tomad por idDelivery */
 
-router.post('/asignarPedidoADelivery/', _userController.ensureToken, _userController.chequeoToken, _pedidoController.asignarPedidoADelivery);
+router.post('/asignarPedidoADelivery/', ensureToken, chequeoToken, asignarPedidoADelivery);
 /** Obtener Historial del delivery*/
 
-router.get('/getHistorialDelivery/:idDelivery', _userController.ensureToken, _userController.chequeoToken, _pedidoController.getPedidosHistorialDelivery);
+router.get('/getHistorialDelivery/:idDelivery', ensureToken, chequeoToken, getPedidosHistorialDelivery);
 /** Pedido entregado */
 
-router.put('/', _userController.ensureToken, _userController.chequeoToken, _pedidoController.updatePedido);
-/* delete pedido*/
+router.put('/', ensureToken, chequeoToken, updatePedido);
+/**  delete pedido**/
 
-router["delete"]('/:id', _userController.ensureToken, _userController.chequeoToken, _pedidoController.deletePedido);
+router.delete('/:id', ensureToken, chequeoToken, deletePedido);
 /* Exporto */
 
-var _default = router;
-exports["default"] = _default;
+export default router;

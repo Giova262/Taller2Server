@@ -6,6 +6,8 @@ import rutasProductos from './rutas/productos'
 import rutasPedidos from './rutas/pedidos'
 import rutasComercios from './rutas/comercios'
 import rutasParametros from './rutas/parametros'
+import rutasEstadisticas from './rutas/estadisticas'
+
 import cors from 'cors'
 
 //import morgan from 'morgan'

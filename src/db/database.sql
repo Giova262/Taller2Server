@@ -156,7 +156,8 @@ CREATE TABLE IF NOT EXISTS "users" (
 	"foto" TEXT NOT NULL ,
 	"cantEnvios" INTEGER NULL DEFAULT NULL,
 	"redsocial" TEXT NOT NULL ,
-	"uidfirebase" TEXT NOT NULL
+	"uidfirebase" TEXT NOT NULL,
+	"token" TEXT NOT NULL
 );
  
 /*Id , nombre , mail ,pass , rol , puntaje,nivel,fotoy cantidad de envios*/ 
@@ -178,4 +179,7 @@ CREATE TABLE IF NOT EXISTS "parametros" (
 );
 INSERT INTO "parametros" ( "par_nombre", "par_value") VALUES
 	( E'pesos_km', E'10'),
+    ( E'pesos_km', E'10'),
+    ( E'adicion_puntaje',E'100'),
+    ( E'cambio_nivel',E'1000'),
     ( E'maxkms', E'20');

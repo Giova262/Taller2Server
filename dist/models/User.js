@@ -1,53 +1,44 @@
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports["default"] = void 0;
-
-var _sequelize = _interopRequireDefault(require("sequelize"));
-
-var _database = require("../database/database");
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
-
+import Sequelize from 'sequelize';
+import { sequelize } from '../database/database';
 /** Defino modelo de los datos */
-var Test = _database.sequelize.define('users', {
+
+const Test = sequelize.define('users', {
   id: {
-    type: _sequelize["default"].INTEGER,
+    type: Sequelize.INTEGER,
     primaryKey: true
   },
   nombre: {
-    type: _sequelize["default"].TEXT
+    type: Sequelize.TEXT
   },
   pass: {
-    type: _sequelize["default"].TEXT
+    type: Sequelize.TEXT
   },
   mail: {
-    type: _sequelize["default"].TEXT
+    type: Sequelize.TEXT
   },
   rol: {
-    type: _sequelize["default"].INTEGER
+    type: Sequelize.INTEGER
   },
   puntaje: {
-    type: _sequelize["default"].INTEGER
+    type: Sequelize.INTEGER
   },
   nivel: {
-    type: _sequelize["default"].INTEGER
+    type: Sequelize.INTEGER
   },
   foto: {
-    type: _sequelize["default"].TEXT
+    type: Sequelize.TEXT
   },
   cantEnvios: {
-    type: _sequelize["default"].INTEGER
+    type: Sequelize.INTEGER
   },
   redsocial: {
-    type: _sequelize["default"].TEXT
+    type: Sequelize.TEXT
   },
   uidfirebase: {
-    type: _sequelize["default"].TEXT
+    type: Sequelize.TEXT
+  },
+  token: {
+    type: Sequelize.TEXT
   }
 });
-
-var _default = Test;
-exports["default"] = _default;
+export default Test;

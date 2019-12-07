@@ -63,17 +63,41 @@ export async function updatePedido(req, res){
                 'rol',
                 'puntaje',
                 'nivel',
-                'foto',
+                'foto', 
                 'cantEnvios',
                 'redsocial',
                 'uidfirebase']
               })
               .then( async user => {
+                
+                //por default
+                var adicionpuntaje=100
+                var pasajenivel=1000
+                
+                //levanto los parametros
+                  const param = await Parametro.findOne({
+                  where: {
+                  par_nombre:'adicion_puntaje'
+                          },
+                  attributes: ['par_id','par_nombre','par_value']
+                       });
+              
+                 if(param)  adicionpuntaje=param.par_value;
+ 
+                  param = await Parametro.findOne({
+                  where: {
+                  par_nombre:'cambio_nivel'
+                          },
+                  attributes: ['par_id','par_nombre','par_value']
+                       });
+              
+                 if(param)  pasajenivel=param.par_value;
 
-                var nuevoPuntaje = user.puntaje + 100
+                //actualizo
+                var nuevoPuntaje = user.puntaje + adicionpuntaje
                 var nuevoLevel = user.nivel 
 
-                if( nuevoPuntaje >= 1000 ){
+                if( nuevoPuntaje >= pasajenivel ){
                   nuevoLevel = nuevoLevel + 1
                   nuevoPuntaje = 0
                 }
@@ -138,6 +162,167 @@ export async function all(req, res)
       message:'no se pudo obtener los pedidos',
       data:error
   });
+}
+}
+
+
+//obtengo los pedidos pendientes 
+export async function getPedidosPendientes(req, res)
+{
+
+  var estadopedido=1
+   
+  try {
+    let pedidos = await Pedido.findAll({
+        where: {
+          ped_estado: estadopedido
+        },
+        attributes: [
+          'ped_id',
+          'ped_userid',
+          'ped_deliveryid',
+          'ped_total',
+          'ped_envio',
+          'ped_direccioninicio',
+          'ped_direcciondestino',
+          'ped_latitudinicio',
+          'ped_longitudinicio',
+          'ped_latituddestino',
+          'ped_longituddestino',
+          'ped_longituddestino',  
+          'ped_estado'
+       ]
+    });
+
+    if(pedidos){
+      
+          res.json(
+          {
+            message:'pedidos pendientes son:',
+            pedidos
+          })
+
+
+
+    }else{
+        res.status(500).json({
+            message:'No se encontro registros de pedidos.'      
+        })
+    }
+    
+} catch (error) {
+    res.status(500).json({
+        message:'algo no funciono',
+        data:{error}
+    });
+}
+}
+
+
+
+//obtengo los pedidos asignados
+export async function getPedidosAsignados(req, res)
+{
+
+var estadopedido=2
+   
+try {
+    let pedidos = await Pedido.findAll({
+        where: {
+          ped_estado: estadopedido
+        },
+        attributes: [
+          'ped_id',
+          'ped_userid',
+          'ped_deliveryid',
+          'ped_total',
+          'ped_envio',
+          'ped_direccioninicio',
+          'ped_direcciondestino',
+          'ped_latitudinicio',
+          'ped_longitudinicio',
+          'ped_latituddestino',
+          'ped_longituddestino',
+          'ped_longituddestino',  
+          'ped_estado'
+       ]
+    });
+
+    if(pedidos){
+      
+          res.json(
+          {
+            message:'pedidos asignados son:',
+            pedidos
+          })
+
+
+
+    }else{
+        res.status(500).json({
+            message:'No se encontro registros de pedidos.'      
+        })
+    }
+    
+} catch (error) {
+    res.status(500).json({
+        message:'algo no funciono',
+        data:{error}
+    });
+}
+}
+
+
+
+//obtengo los pedidos cancelados
+export async function getPedidosCancelados(req, res)
+{
+
+var estadopedido=3
+   
+try {
+    let pedidos = await Pedido.findAll({
+        where: {
+          ped_estado: estadopedido
+        },
+        attributes: [
+          'ped_id',
+          'ped_userid',
+          'ped_deliveryid',
+          'ped_total',
+          'ped_envio',
+          'ped_direccioninicio',
+          'ped_direcciondestino',
+          'ped_latitudinicio',
+          'ped_longitudinicio',
+          'ped_latituddestino',
+          'ped_longituddestino',
+          'ped_longituddestino',  
+          'ped_estado'
+       ]
+    });
+
+    if(pedidos){
+      
+          res.json(
+          {
+            message:'pedidos asignados son:',
+            pedidos
+          })
+
+
+
+    }else{
+        res.status(500).json({
+            message:'No se encontro registros de pedidos.'      
+        })
+    }
+    
+} catch (error) {
+    res.status(500).json({
+        message:'algo no funciono',
+        data:{error}
+    });
 }
 }
 
@@ -835,7 +1020,7 @@ try{
   
 export async function deletePedido(req, res)
 {
-var {id} = req.paramsparams;
+var {id} = req.params;
  try {
 
   //borro los items del pedido
@@ -866,3 +1051,71 @@ var {id} = req.paramsparams;
     });
 }
 }
+
+export async function getTotalFacturadoUsuario(req, res)
+{
+
+var {id} = req.params;
+try {
+
+  var sqlquery= 'SELECT sum(ped_total) FROM pedidos where pedidos.ped_userid='.concat(id);
+  var total =  await sequelize.query(sqlquery ,{ type: sequelize.QueryTypes.SELECT});
+  
+  if(total){
+  
+             res.json({
+  
+                  message:'total facturado usuario',
+                  total
+  
+              });
+          }
+          else{
+              res.status(500).json({
+                  message:'No se encontro registros.'      
+              })
+          }
+         
+    
+        } catch (error) {
+            res.status(500).json({
+                message:'hubo un error',
+                data:{error}
+            });
+        } 
+    }  
+
+
+    export async function getTotalFacturadoDelivery(req, res)
+    {
+    
+    var {id} = req.params;
+    try {
+    
+      var sqlquery= 'SELECT sum(pedidos.ped_envio*0.05) FROM pedidos where pedidos.ped_deliveryid'.concat(id);
+      var total =  await sequelize.query(sqlquery ,{ type: sequelize.QueryTypes.SELECT});
+      
+      if(total){
+      
+                 res.json({
+      
+                      message:'total facturado usuario',
+                      total
+      
+                  });
+              }
+              else{
+                  res.status(500).json({
+                      message:'No se encontro registros.'      
+                  })
+              }
+             
+        
+            } catch (error) {
+                res.status(500).json({
+                    message:'hubo un error',
+                    data:{error}
+                });
+            } 
+        }  
+  
