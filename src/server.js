@@ -6,27 +6,15 @@ import rutasProductos from './rutas/productos'
 import rutasPedidos from './rutas/pedidos'
 import rutasComercios from './rutas/comercios'
 import rutasParametros from './rutas/parametros'
-
 import cors from 'cors'
 
-//import morgan from 'morgan'
-//app.use( morgan('dev') )
 
 /** Inicializacion */
 const app = express()
 
 
 /** Middlewares */
-//app.use(express.json())
-/*
-app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*"); // update to match the domain you will make the request from
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    next();
-  });*/
-
-//app.use(require('connect').bodyParser());
-
+//app.use(bodyParser)
 app.use( json() )
 app.set( 'port' , process.env.PORT || 5000 ) 
 

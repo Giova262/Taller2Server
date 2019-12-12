@@ -5,7 +5,7 @@ import {Router} from 'express'
 
 const router = Router()
 
-    /** Controladores */
+/** Controladores */
 
 import {  
     getAll,
@@ -19,11 +19,19 @@ import {
     getUsuariosPorDelivery,
     updateUser,
     deleteUser,
-    getUsuariosTop10,
-    getDeliverysTop10
+    topDiezUser,
+    topDiezDelivery
     } from '../controllers/userController';
 
     /** Rutas */
+
+
+
+/** Obtener top user */
+router.get('/topDiezUser',topDiezUser);
+
+/** Obtener top delivery */
+router.get('/topDiezDelivery',topDiezDelivery);
 
 /** Obtener todos los usuarios */
 router.get('/', getAll );
@@ -52,11 +60,6 @@ router.put('/:id',ensureToken,chequeoToken, updateUser );
 /** Actualizar usuario*/
 router.delete('/:id',ensureToken,chequeoToken, deleteUser);
 
-/** usuarios top 10 */
-router.get('/Top10Users',ensureToken,chequeoToken, getUsuariosTop10);
-
-/** deliveries top 10 */
-router.get('/Top10Deliverys',ensureToken,chequeoToken, getDeliverysTop10);
 
 
 /** Exporto */

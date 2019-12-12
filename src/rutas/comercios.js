@@ -26,10 +26,10 @@ import {
 router.get('/', ensureToken,chequeoToken,getAll );
 
 /* Obtener todos los comercios activos*/
-router.get('/Activos', ensureToken,chequeoToken,getAllActivos);
+router.get('/Activos',/* ensureToken,chequeoToken,*/getAllActivos);
 
 /* Obtener todos los comercios no activos*/
-router.get('/NoActivos', ensureToken,chequeoToken,getAllNoActivos);
+router.get('/NoActivos',/* ensureToken,chequeoToken,*/getAllNoActivos);
 
 /* Obtener comercio por id */
 router.get('/:id', ensureToken,chequeoToken,getOne );

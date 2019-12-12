@@ -1,4 +1,5 @@
 import Comercio from '../models/Comercio';
+import {sequelize} from '../database/database';
 
 
 /**Obtener un solo comercio */
@@ -109,67 +110,64 @@ export async function getAllActivos(req, res)
 {
 
     var estadoActivo=1
+    var sqlquery= 'SELECT comercios.* as total FROM comercios where comercios.com_estado='.concat(estadoActivo);
     try{
-        let comercios= Comercio.find({ where:  {com_estado:estadoActivo } })
-        
-        if(comercios){
-
-            res.json({
+    var comercio=  await sequelize.query(sqlquery ,{ type: sequelize.QueryTypes.SELECT});
+    
+    if(comercio){
+    
+               res.json({
+    
+                    message:'comercios activos',
+                    comercio
+    
+                });
+            }
+            else{
+                res.status(500).json({
+                    message:'No se encontro registros.'      
+                })
+            }
  
-                 message:'todos los comercios activos registrados',
-                 data:comercios
+        } catch (error) {
+            res.status(500).json({
+                message:'algo salio mal obteniendo los comercios',
+                data:{error}
+            });
+        }
  
-             });          
-         }
-         else{
-             res.status(500).json({
-                 message:'No se encontro registros de comercios.',
-                 data: {}      
-             })
-         }
-        
-        
-   
-       } catch (error) {
-           res.status(500).json({
-               message:'algo salio mal obteniendo los comercios',
-               data:{error}
-           });
-       } 
 }
 
 
 export async function getAllNoActivos(req, res)
 {
 
-    var estadoNoActivo=2
+    var estadoActivo=2
+    var sqlquery= 'SELECT comercios.* as total FROM comercios where comercios.com_estado='.concat(estadoActivo);
     try{
-        let comercios= Comercio.find({ where:  {com_estado:estadoNoActivo } })
-        
-        if(comercios){
-
-            res.json({
+    var comercios =  await sequelize.query(sqlquery ,{ type: sequelize.QueryTypes.SELECT});
+    
+    if(comercios){
+    
+               res.json({
+    
+                    message:'comercios No activos',
+                    comercios
+    
+                });
+            }
+            else{
+                res.status(500).json({
+                    message:'No se encontro registros.'      
+                })
+            }
  
-                 message:'todos los comercios no activos registrados',
-                 data:comercios
- 
-             });          
-         }
-         else{
-             res.status(500).json({
-                 message:'No se encontro registros de comercios.',
-                 data: {}      
-             })
-         }
-        
-        
-   
-       } catch (error) {
-           res.status(500).json({
-               message:'algo salio mal obteniendo los comercios',
-               data:{error}
-           });
-       } 
+        } catch (error) {
+            res.status(500).json({
+                message:'algo salio mal obteniendo los comercios',
+                data:{error}
+            });
+        }
 }
 
 

@@ -3,6 +3,7 @@ import Producto from '../models/Producto'
 import User from '../models/User'
 import Item from '../models/Item'
 import Parametro from '../models/Parametro'
+import {sequelize} from '../database/database';
 
 import {getKilometros, getPrecioEnvioPorReglas, getPorcentajeEnvioPorReglas}  from '../service/Service'
 
@@ -1058,9 +1059,8 @@ export async function getTotalFacturadoUsuario(req, res)
 var {id} = req.params;
 try {
 
-  var sqlquery= 'SELECT sum(ped_total) FROM pedidos where pedidos.ped_userid='.concat(id);
-  var total =  await sequelize.query(sqlquery ,{ type: sequelize.QueryTypes.SELECT});
-  
+  var sqlquery= 'SELECT sum(ped_total) as total FROM pedidos where pedidos.ped_userid='.concat(id);
+  var total = await sequelize.query(sqlquery ,{ type: sequelize.QueryTypes.SELECT});
   if(total){
   
              res.json({
@@ -1083,7 +1083,8 @@ try {
                 data:{error}
             });
         } 
-    }  
+    
+     }  
 
 
     export async function getTotalFacturadoDelivery(req, res)
@@ -1092,7 +1093,8 @@ try {
     var {id} = req.params;
     try {
     
-      var sqlquery= 'SELECT sum(pedidos.ped_envio*0.05) FROM pedidos where pedidos.ped_deliveryid'.concat(id);
+      var sqlquery= 'SELECT sum(pedidos.ped_envio*0.05) as total FROM pedidos where pedidos.ped_deliveryid='.concat(id);
+     
       var total =  await sequelize.query(sqlquery ,{ type: sequelize.QueryTypes.SELECT});
       
       if(total){

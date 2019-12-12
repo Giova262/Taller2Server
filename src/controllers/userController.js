@@ -463,7 +463,8 @@ export async function getOne(req,res,next)
             'foto',
             'cantEnvios',
             'redsocial',
-            'uidfirebase']
+            'uidfirebase',
+            'token']
         });
 
         if(userFound){
@@ -527,6 +528,8 @@ try{
 
 var sqlquery= 'select Distinct(users.*) from users, pedidos where pedidos.ped_userid=users.id and pedidos.ped_deliveryid='.concat(iddelivery).concat(' ORDER BY users.nombre ');
 
+//res.json(sqlquery);
+
 var  usuarios =  await sequelize.query(sqlquery ,{ type: sequelize.QueryTypes.SELECT});
 
 if(usuarios){
@@ -581,14 +584,17 @@ if(usuarios){
  }
 
 
- /*top usuarios 10*/
-export async function getUsuariosTop10(req,res)
+ /*top 10  usuarios*/
+export async function topDiezUser(req,res)
 {
 var rolUsuario=1
 try{
 
 var sqlquery= 'select Distinct(users.*) from users WHERE users.rol='.concat(rolUsuario).concat(' ORDER BY puntaje DESC LIMIT 10');
 
+//res.json(sqlquery);
+
+
 var  usuarios =  await sequelize.query(sqlquery ,{ type: sequelize.QueryTypes.SELECT});
 
 if(usuarios){
@@ -613,23 +619,28 @@ if(usuarios){
               data:{error}
           });
       } 
+
  }
 
-  /*top deliveris 10*/
-export async function getDeliverysTop10(req,res)
+ 
+ /*top 10  delivery*/
+export async function topDiezDelivery(req,res)
 {
-var rolUsuario=2
+var rolUsuario=0;
 try{
 
 var sqlquery= 'select Distinct(users.*) from users WHERE users.rol='.concat(rolUsuario).concat(' ORDER BY puntaje DESC LIMIT 10');
 
+//res.json(sqlquery);
+
+
 var  usuarios =  await sequelize.query(sqlquery ,{ type: sequelize.QueryTypes.SELECT});
 
 if(usuarios){
 
            res.json({
 
-                message:'los 10 top usuarios',
+                message:'los 10 top deliverys',
                 usuarios
 
             });
@@ -647,4 +658,5 @@ if(usuarios){
               data:{error}
           });
       } 
+
  }
