@@ -24,7 +24,7 @@
     "pg-hstore": "^2.3.3",
     "sequelize": "^5.18.2",
     "sequelize-heroku": "^2.1.4",
-    "socket.io": "^2.3.0"
+    "socket.io": "^2.5.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.6.0",
